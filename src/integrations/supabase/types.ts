@@ -14,7 +14,262 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attendances: {
+        Row: {
+          date_added: string | null
+          guest_name: string | null
+          id: number
+          status: string | null
+          wedding_id: number
+        }
+        Insert: {
+          date_added?: string | null
+          guest_name?: string | null
+          id?: number
+          status?: string | null
+          wedding_id: number
+        }
+        Update: {
+          date_added?: string | null
+          guest_name?: string | null
+          id?: number
+          status?: string | null
+          wedding_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendances_wedding_id_fkey"
+            columns: ["wedding_id"]
+            isOneToOne: false
+            referencedRelation: "weddings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      modules: {
+        Row: {
+          created_at: string | null
+          module_id: number
+          module_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          module_id?: number
+          module_name: string
+        }
+        Update: {
+          created_at?: string | null
+          module_id?: number
+          module_name?: string
+        }
+        Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          can_add: boolean | null
+          can_delete: boolean | null
+          can_edit: boolean | null
+          can_view: boolean | null
+          module_id: number
+          role_id: number
+        }
+        Insert: {
+          can_add?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          module_id: number
+          role_id: number
+        }
+        Update: {
+          can_add?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          module_id?: number
+          role_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_permissions_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["module_id"]
+          },
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["role_id"]
+          },
+        ]
+      }
+      roles: {
+        Row: {
+          created_at: string | null
+          role_id: number
+          role_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          role_id?: number
+          role_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          role_id?: number
+          role_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_permissions: {
+        Row: {
+          can_add: boolean | null
+          can_delete: boolean | null
+          can_edit: boolean | null
+          can_view: boolean | null
+          id: number
+          module_id: number
+          user_id: number
+        }
+        Insert: {
+          can_add?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          id?: number
+          module_id: number
+          user_id: number
+        }
+        Update: {
+          can_add?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          can_view?: boolean | null
+          id?: number
+          module_id?: number
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_permissions_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["module_id"]
+          },
+          {
+            foreignKeyName: "user_permissions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          name: string
+          password: string
+          phone: string | null
+          role_id: number | null
+          updated_at: string | null
+          user_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          name: string
+          password: string
+          phone?: string | null
+          role_id?: number | null
+          updated_at?: string | null
+          user_id?: number
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          name?: string
+          password?: string
+          phone?: string | null
+          role_id?: number | null
+          updated_at?: string | null
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["role_id"]
+          },
+        ]
+      }
+      weddings: {
+        Row: {
+          background_image: string | null
+          background_music: string | null
+          bride_name: string | null
+          date_added: string | null
+          description1: string | null
+          description2: string | null
+          email: string | null
+          groom_name: string | null
+          id: number
+          location_text: string | null
+          location_url: string | null
+          max_attendance: number | null
+          phone_number: string | null
+          wedding_date: string | null
+          wedding_name: string
+          whish_account: string | null
+        }
+        Insert: {
+          background_image?: string | null
+          background_music?: string | null
+          bride_name?: string | null
+          date_added?: string | null
+          description1?: string | null
+          description2?: string | null
+          email?: string | null
+          groom_name?: string | null
+          id?: number
+          location_text?: string | null
+          location_url?: string | null
+          max_attendance?: number | null
+          phone_number?: string | null
+          wedding_date?: string | null
+          wedding_name: string
+          whish_account?: string | null
+        }
+        Update: {
+          background_image?: string | null
+          background_music?: string | null
+          bride_name?: string | null
+          date_added?: string | null
+          description1?: string | null
+          description2?: string | null
+          email?: string | null
+          groom_name?: string | null
+          id?: number
+          location_text?: string | null
+          location_url?: string | null
+          max_attendance?: number | null
+          phone_number?: string | null
+          wedding_date?: string | null
+          wedding_name?: string
+          whish_account?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
