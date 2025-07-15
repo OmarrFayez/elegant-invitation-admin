@@ -43,7 +43,7 @@ const Index = () => {
           
           <div className="flex gap-4 justify-center">
             <Button asChild size="lg">
-              <Link to="/auth">
+              <Link to="/admin">
                 Access Admin Panel
               </Link>
             </Button>
@@ -83,8 +83,8 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full">
-                <Link to="/auth">
-                  Sign In to Admin Panel
+                <Link to="/admin">
+                  Access Admin Panel
                 </Link>
               </Button>
             </CardContent>
