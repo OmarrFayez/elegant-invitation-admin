@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import InvitationForm from "@/components/admin/InvitationForm";
 import AttendeesList from "@/components/admin/AttendeesList";
+import InvitationPreview from "@/components/admin/InvitationPreview";
 
 interface Wedding {
   id: number;
@@ -34,6 +35,7 @@ const Invitations = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingWedding, setEditingWedding] = useState<Wedding | null>(null);
   const [showAttendees, setShowAttendees] = useState<number | null>(null);
+  const [previewWedding, setPreviewWedding] = useState<Wedding | null>(null);
   const { toast } = useToast();
 
   const fetchWeddings = async () => {
@@ -111,6 +113,15 @@ const Invitations = () => {
     );
   }
 
+  if (previewWedding) {
+    return (
+      <InvitationPreview
+        wedding={previewWedding}
+        onClose={() => setPreviewWedding(null)}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -183,6 +194,14 @@ const Invitations = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setPreviewWedding(wedding)}
+                          title="Preview Invitation"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"

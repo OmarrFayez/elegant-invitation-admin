@@ -62,7 +62,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
 
   const handleFileUpload = async (file: File, path: string) => {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${path}/${fileName}`;
 
     const { error } = await supabase.storage
@@ -71,7 +71,12 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
 
     if (error) throw error;
 
-    return filePath;
+    // Get the public URL for the uploaded file
+    const { data } = supabase.storage
+      .from('wedding-files')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -311,7 +316,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
                 <Input
                   id="background_music"
                   type="file"
-                  accept="audio/mp3"
+                  accept="audio/*"
                   onChange={(e) => setBackgroundMusic(e.target.files?.[0] || null)}
                 />
               </div>
