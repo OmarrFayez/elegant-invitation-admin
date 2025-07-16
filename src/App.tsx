@@ -9,6 +9,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import Invitations from "./pages/admin/Invitations";
 import Users from "./pages/admin/Users";
 import Roles from "./pages/admin/Roles";
+import Invitation from "./pages/Invitation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/invitation/:id" element={<Invitation />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="invitations" element={<Invitations />} />

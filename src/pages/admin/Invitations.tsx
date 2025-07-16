@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Eye, Edit, Trash2, Users } from "lucide-react";
+import { Plus, Eye, Edit, Trash2, Users, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import InvitationForm from "@/components/admin/InvitationForm";
@@ -201,6 +201,14 @@ const Invitations = () => {
                           title="Preview Invitation"
                         >
                           <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => window.open(`/invitation/${wedding.id}`, '_blank')}
+                          title="View Invitation Card"
+                        >
+                          <ExternalLink className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
