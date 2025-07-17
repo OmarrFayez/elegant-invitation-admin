@@ -47,7 +47,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
       return;
     }
 
-    if (status === 'Attending' && guestNames.some(name => !name.trim())) {
+    if ((status === 'Attending' || status === 'Not Attending') && guestNames.some(name => !name.trim())) {
       toast({
         title: "Error", 
         description: "Please fill in all guest names",
@@ -134,11 +134,11 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
           </div>
 
           {/* Number of Guests */}
-          {status === 'Attending' && (
+          {(status === 'Attending' || status === 'Not Attending') && (
             <>
               <div className="space-y-2">
                 <Label htmlFor="numberOfGuests" className="text-primary font-semibold">
-                  Number of Guests Attending
+                  {status === 'Attending' ? 'Number of Guests Attending' : 'Number of Guests Not Attending'}
                 </Label>
                 <Select value={numberOfGuests.toString()} onValueChange={handleNumberOfGuestsChange}>
                   <SelectTrigger className="h-12">
