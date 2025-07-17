@@ -293,30 +293,11 @@ const Invitation: React.FC = () => {
                 </div>
               )}
 
-              {/* Additional Info */}
-              {(wedding.max_attendance || wedding.phone_number || wedding.email) && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-                  {wedding.max_attendance && (
-                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
-                      <Users className="h-6 w-6 text-primary mx-auto mb-2" />
-                      <div className="text-sm font-semibold text-primary">Max Guests</div>
-                      <p className="text-gray-700">{wedding.max_attendance}</p>
-                    </div>
-                  )}
-                  
-                  {wedding.phone_number && (
-                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
-                      <div className="text-sm font-semibold text-primary mb-1">Contact</div>
-                      <p className="text-gray-700 text-sm">{wedding.phone_number}</p>
-                    </div>
-                  )}
-                  
-                  {wedding.email && (
-                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
-                      <div className="text-sm font-semibold text-primary mb-1">Email</div>
-                      <p className="text-gray-700 text-sm">{wedding.email}</p>
-                    </div>
-                  )}
+              {/* Contact Info */}
+              {wedding.phone_number && (
+                <div className="text-center p-6 bg-white rounded-2xl shadow-lg mb-12">
+                  <div className="text-lg font-semibold text-primary mb-2">Contact Us</div>
+                  <p className="text-gray-700">{wedding.phone_number}</p>
                 </div>
               )}
 
