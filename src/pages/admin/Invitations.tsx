@@ -193,15 +193,15 @@ const Invitations = () => {
                       {new Date(wedding.date_added).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
-                    {/*   <div className="flex items-center space-x-2">
-                        <Button
+                      <div className="flex items-center space-x-2">
+                     {/*    <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => setPreviewWedding(wedding)}
                           title="Preview Invitation"
                         >
                           <Eye className="h-4 w-4" />
-                        </Button>*/}
+                        </Button> */}
                         <Button
                           variant="ghost"
                           size="icon"
