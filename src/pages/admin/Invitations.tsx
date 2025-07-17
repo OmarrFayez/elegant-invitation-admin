@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Users, ExternalLink, Heart, Calendar } from "lucide-react";
+import { Plus, Eye, Edit, Trash2, Users, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import InvitationForm from "@/components/admin/InvitationForm";
 import AttendeesList from "@/components/admin/AttendeesList";
+import InvitationPreview from "@/components/admin/InvitationPreview";
 
 interface Wedding {
   id: number;
@@ -32,6 +35,7 @@ const Invitations = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingWedding, setEditingWedding] = useState<Wedding | null>(null);
   const [showAttendees, setShowAttendees] = useState<number | null>(null);
+  const [previewWedding, setPreviewWedding] = useState<Wedding | null>(null);
   const { toast } = useToast();
 
   const fetchWeddings = async () => {
@@ -109,6 +113,14 @@ const Invitations = () => {
     );
   }
 
+  if (previewWedding) {
+    return (
+      <InvitationPreview
+        wedding={previewWedding}
+        onClose={() => setPreviewWedding(null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -125,130 +137,112 @@ const Invitations = () => {
         </Button>
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        </div>
-      ) : weddings.length === 0 ? (
-        <div className="text-center py-16 bg-gradient-to-br from-primary/5 to-accent/5 rounded-3xl border border-primary/10">
-          <Heart className="h-16 w-16 text-primary/40 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-foreground mb-2">No Invitations Yet</h3>
-          <p className="text-muted-foreground mb-6">Create your first beautiful wedding invitation</p>
-          <Button onClick={() => setShowForm(true)} className="bg-gradient-to-r from-primary to-accent">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Invitation
-          </Button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {weddings.map((wedding) => (
-            <div
-              key={wedding.id}
-              className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white to-primary/5 border border-primary/10 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
-            >
-              {/* Background Pattern */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-50" />
-              
-              {/* Content */}
-              <div className="relative p-6">
-                {/* Wedding Name */}
-                <div className="mb-4">
-                  <h3 className="font-script text-2xl font-bold text-primary mb-1 line-clamp-1">
-                    {wedding.wedding_name}
-                  </h3>
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-primary to-accent rounded-full" />
-                </div>
-
-                {/* Couple Names */}
-                <div className="mb-4">
-                  <p className="text-lg font-semibold text-foreground">
-                    {wedding.groom_name} <span className="text-primary font-script">&</span> {wedding.bride_name}
-                  </p>
-                </div>
-
-                {/* Wedding Date */}
-                {wedding.wedding_date && (
-                  <div className="flex items-center gap-2 mb-4 text-muted-foreground">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <span className="text-sm">
-                      {new Date(wedding.wedding_date).toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </span>
-                  </div>
-                )}
-
-                {/* Contact Info */}
-                {wedding.phone_number && (
-                  <div className="mb-4">
-                    <p className="text-sm text-muted-foreground">
-                      {wedding.phone_number}
-                    </p>
-                  </div>
-                )}
-
-                {/* Date Added */}
-                <div className="mb-6">
-                  <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
-                    Created {new Date(wedding.date_added).toLocaleDateString()}
-                  </span>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => window.open(`/invitation/${wedding.id}`, '_blank')}
-                      className="bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20"
-                    >
-                      <ExternalLink className="h-4 w-4 mr-1" />
-                      View
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowAttendees(wedding.id)}
-                      className="bg-accent/10 hover:bg-accent/20 text-accent-foreground border border-accent/20"
-                    >
-                      <Users className="h-4 w-4 mr-1" />
-                      Guests
-                    </Button>
-                  </div>
-                  
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setEditingWedding(wedding)}
-                      className="h-8 w-8 hover:bg-primary/10 text-primary"
-                    >
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(wedding.id)}
-                      className="h-8 w-8 hover:bg-destructive/10 text-destructive"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Decorative Elements */}
-              <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Heart className="h-8 w-8 text-primary" />
-              </div>
-              <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-primary/10 to-transparent rounded-tl-full" />
+      <Card>
+        <CardHeader>
+          <CardTitle>Wedding Invitations</CardTitle>
+          <CardDescription>
+            View and manage all wedding invitation cards
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
-          ))}
-        </div>
-      )}
+          ) : weddings.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No wedding invitations found</p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Wedding Name</TableHead>
+                  <TableHead>Couple</TableHead>
+                  <TableHead>Contact</TableHead>
+                  <TableHead>Wedding Date</TableHead>
+                  <TableHead>Max Guests</TableHead>
+                  <TableHead>Date Added</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {weddings.map((wedding) => (
+                  <TableRow key={wedding.id}>
+                    <TableCell className="font-medium">
+                      {wedding.wedding_name}
+                    </TableCell>
+                    <TableCell>
+                      {wedding.groom_name} & {wedding.bride_name}
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        <div>{wedding.phone_number}</div>
+                        <div className="text-muted-foreground">{wedding.email}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {wedding.wedding_date ? new Date(wedding.wedding_date).toLocaleDateString() : "Not set"}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">
+                        {wedding.max_attendance || "Unlimited"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(wedding.date_added).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setPreviewWedding(wedding)}
+                          title="Preview Invitation"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => window.open(`/invitation/${wedding.id}`, '_blank')}
+                          title="View Invitation Card"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setShowAttendees(wedding.id)}
+                          title="View Attendees"
+                        >
+                          <Users className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setEditingWedding(wedding)}
+                          title="Edit"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(wedding.id)}
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
