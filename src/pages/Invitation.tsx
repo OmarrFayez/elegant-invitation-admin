@@ -145,166 +145,201 @@ const Invitation: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative overflow-hidden">
       {/* Background Image */}
       {wedding.background_image && (
         <div
-          className="fixed inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+          className="fixed inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${wedding.background_image})` }}
         />
       )}
       
-      {/* Gradient Overlay */}
-      <div className="fixed inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80" />
+      {/* Dark Overlay */}
+      <div className="fixed inset-0 bg-black/40" />
       
       {/* Mute Button */}
       {wedding.background_music && (
         <Button
           variant="ghost"
           size="icon"
-          className="fixed top-4 right-4 z-10 bg-white/80 hover:bg-white text-gray-900"
+          className="fixed top-6 right-6 z-20 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border border-white/30"
           onClick={toggleMute}
         >
-          {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
         </Button>
       )}
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
-        <Card className="max-w-4xl mx-auto overflow-hidden mb-8">
-          <CardContent className="p-8 text-center">
-            {/* Header */}
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Hero Section */}
+        <div className="flex-1 flex items-center justify-center px-6 py-20">
+          <div className="text-center text-white max-w-md mx-auto">
+            {/* Names */}
             <div className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-                {wedding.wedding_name}
+              <h1 className="font-script text-6xl md:text-7xl font-bold mb-2 leading-tight">
+                {wedding.groom_name}
               </h1>
-              <div className="flex items-center justify-center gap-2 text-2xl md:text-3xl text-muted-foreground">
-                <Heart className="h-6 w-6 text-rose-500 fill-current" />
-                <span className="font-semibold">{wedding.groom_name}</span>
-                <span>&</span>
-                <span className="font-semibold">{wedding.bride_name}</span>
-                <Heart className="h-6 w-6 text-rose-500 fill-current" />
+              <div className="font-serif text-2xl md:text-3xl mb-2 opacity-90">
+                &
               </div>
+              <h1 className="font-script text-6xl md:text-7xl font-bold leading-tight">
+                {wedding.bride_name}
+              </h1>
             </div>
 
-            {/* Countdown Timer */}
+            {/* Getting Married */}
+            <div className="mb-8">
+              <p className="font-serif text-lg md:text-xl opacity-90 tracking-wider">
+                are getting married
+              </p>
+            </div>
+
+            {/* Countdown */}
             {wedding.wedding_date && (
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4 text-primary">Wedding Countdown</h2>
-                <div className="grid grid-cols-4 gap-4 max-w-md mx-auto">
-                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                    <div className="text-2xl font-bold text-primary">{timeLeft.days}</div>
-                    <div className="text-sm text-muted-foreground">Days</div>
+              <div className="mb-12">
+                <div className="flex justify-center items-center gap-4 text-white">
+                  <div className="text-center">
+                    <div className="text-3xl md:text-4xl font-bold">{timeLeft.days}</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Days</div>
                   </div>
-                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                    <div className="text-2xl font-bold text-primary">{timeLeft.hours}</div>
-                    <div className="text-sm text-muted-foreground">Hours</div>
+                  <div className="text-2xl opacity-50">:</div>
+                  <div className="text-center">
+                    <div className="text-3xl md:text-4xl font-bold">{timeLeft.hours}</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Hours</div>
                   </div>
-                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                    <div className="text-2xl font-bold text-primary">{timeLeft.minutes}</div>
-                    <div className="text-sm text-muted-foreground">Minutes</div>
+                  <div className="text-2xl opacity-50">:</div>
+                  <div className="text-center">
+                    <div className="text-3xl md:text-4xl font-bold">{timeLeft.minutes}</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Minutes</div>
                   </div>
-                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                    <div className="text-2xl font-bold text-primary">{timeLeft.seconds}</div>
-                    <div className="text-sm text-muted-foreground">Seconds</div>
+                  <div className="text-2xl opacity-50">:</div>
+                  <div className="text-center">
+                    <div className="text-3xl md:text-4xl font-bold">{timeLeft.seconds}</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Seconds</div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Date and Location */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {wedding.wedding_date && (
-                <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <Calendar className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-primary">Wedding Date</h3>
-                  </div>
-                  <p className="text-foreground">{formatDate(wedding.wedding_date)}</p>
-                </div>
-              )}
+            {/* Scroll Indicator */}
+            <div className="animate-bounce">
+              <div className="flex flex-col items-center gap-2 text-white/80">
+                <p className="font-serif text-sm tracking-wider">Swipe Up</p>
+                <div className="w-0.5 h-8 bg-white/60"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Details Section */}
+        <div className="bg-white/95 backdrop-blur-sm min-h-screen">
+          <div className="container mx-auto px-6 py-12">
+            <div className="max-w-2xl mx-auto space-y-8">
               
-              {wedding.location_text && (
-                <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-primary">Location</h3>
+              {/* Wedding Title */}
+              <div className="text-center mb-12">
+                <h2 className="font-script text-4xl md:text-5xl text-primary mb-4">
+                  {wedding.wedding_name}
+                </h2>
+                <div className="w-24 h-0.5 bg-primary/30 mx-auto"></div>
+              </div>
+
+              {/* Date and Location */}
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                {wedding.wedding_date && (
+                  <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+                    <Calendar className="h-8 w-8 text-primary mx-auto mb-4" />
+                    <h3 className="font-serif text-xl font-semibold text-primary mb-2">When</h3>
+                    <p className="text-gray-700 leading-relaxed">{formatDate(wedding.wedding_date)}</p>
                   </div>
-                  <p className="text-foreground">{wedding.location_text}</p>
-                  {wedding.location_url && (
-                    <a
-                      href={wedding.location_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline text-sm mt-2 inline-block"
-                    >
-                      View on Map
-                    </a>
+                )}
+                
+                {wedding.location_text && (
+                  <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+                    <MapPin className="h-8 w-8 text-primary mx-auto mb-4" />
+                    <h3 className="font-serif text-xl font-semibold text-primary mb-2">Where</h3>
+                    <p className="text-gray-700 leading-relaxed mb-3">{wedding.location_text}</p>
+                    {wedding.location_url && (
+                      <a
+                        href={wedding.location_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline text-sm font-medium"
+                      >
+                        View on Map
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Descriptions */}
+              {(wedding.description1 || wedding.description2) && (
+                <div className="space-y-6 mb-12">
+                  {wedding.description1 && (
+                    <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+                      <p className="text-gray-700 italic leading-relaxed font-serif text-lg">
+                        "{wedding.description1}"
+                      </p>
+                    </div>
+                  )}
+                  {wedding.description2 && (
+                    <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+                      <p className="text-gray-700 italic leading-relaxed font-serif text-lg">
+                        "{wedding.description2}"
+                      </p>
+                    </div>
                   )}
                 </div>
               )}
+
+              {/* Additional Info */}
+              {(wedding.max_attendance || wedding.phone_number || wedding.email) && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+                  {wedding.max_attendance && (
+                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
+                      <Users className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <div className="text-sm font-semibold text-primary">Max Guests</div>
+                      <p className="text-gray-700">{wedding.max_attendance}</p>
+                    </div>
+                  )}
+                  
+                  {wedding.phone_number && (
+                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
+                      <div className="text-sm font-semibold text-primary mb-1">Contact</div>
+                      <p className="text-gray-700 text-sm">{wedding.phone_number}</p>
+                    </div>
+                  )}
+                  
+                  {wedding.email && (
+                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
+                      <div className="text-sm font-semibold text-primary mb-1">Email</div>
+                      <p className="text-gray-700 text-sm">{wedding.email}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Wish Account */}
+              {wedding.whish_account && (
+                <div className="text-center p-6 bg-white rounded-2xl shadow-lg mb-12">
+                  <Heart className="h-8 w-8 text-rose-500 mx-auto mb-4" />
+                  <h3 className="font-serif text-xl font-semibold text-primary mb-3">Wedding Wishes</h3>
+                  <p className="text-gray-700 leading-relaxed">{wedding.whish_account}</p>
+                </div>
+              )}
+
+              {/* Attendance Form */}
+              <AttendanceForm weddingId={wedding.id} />
             </div>
-
-            {/* Descriptions */}
-            {(wedding.description1 || wedding.description2) && (
-              <div className="space-y-4 mb-8">
-                {wedding.description1 && (
-                  <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                    <p className="text-foreground italic">{wedding.description1}</p>
-                  </div>
-                )}
-                {wedding.description2 && (
-                  <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                    <p className="text-foreground italic">{wedding.description2}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Additional Info */}
-            <div className="grid md:grid-cols-3 gap-4 mb-8">
-              {wedding.max_attendance && (
-                <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                  <div className="flex items-center justify-center gap-2 mb-1">
-                    <Users className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold text-primary">Max Guests</span>
-                  </div>
-                  <p className="text-foreground">{wedding.max_attendance}</p>
-                </div>
-              )}
-              
-              {wedding.phone_number && (
-                <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                  <div className="text-sm font-semibold text-primary mb-1">Contact</div>
-                  <p className="text-foreground text-sm">{wedding.phone_number}</p>
-                </div>
-              )}
-              
-              {wedding.email && (
-                <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                  <div className="text-sm font-semibold text-primary mb-1">Email</div>
-                  <p className="text-foreground text-sm">{wedding.email}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Wish Account */}
-            {wedding.whish_account && (
-              <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                <h3 className="font-semibold text-primary mb-2">Wedding Wishes</h3>
-                <p className="text-foreground">{wedding.whish_account}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Attendance Form */}
-        <AttendanceForm weddingId={wedding.id} />
-
-        {/* Audio Element */}
-        {wedding.background_music && (
-          <audio ref={audioRef} className="hidden" />
-        )}
+          </div>
+        </div>
       </div>
+
+      {/* Audio Element */}
+      {wedding.background_music && (
+        <audio ref={audioRef} className="hidden" />
+      )}
     </div>
   );
 };
