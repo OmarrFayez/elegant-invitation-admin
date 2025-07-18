@@ -24,6 +24,7 @@ interface Wedding {
   location_url: string;
   background_image: string;
   background_music: string;
+  background_color?: string;
   user_id?: number;
 }
 
@@ -46,6 +47,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
     whish_account: wedding?.whish_account || "",
     location_text: wedding?.location_text || "",
     location_url: wedding?.location_url || "",
+    background_color: wedding?.background_color || "#f3f4f6",
   });
 
   const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
@@ -72,7 +74,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
     fetchUsers();
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -311,8 +313,8 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
-            {/* File Upload */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* File Upload and Background Color */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="background_image">Background Image</Label>
                 <Input
@@ -334,6 +336,27 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
                     setBackgroundMusic(e.target.files?.[0] || null)
                   }
                 />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="background_color">Background Color</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="background_color"
+                    name="background_color"
+                    type="color"
+                    value={formData.background_color}
+                    onChange={handleInputChange}
+                    className="w-16 h-10 p-1 rounded cursor-pointer"
+                  />
+                  <Input
+                    name="background_color"
+                    type="text"
+                    value={formData.background_color}
+                    onChange={handleInputChange}
+                    className="flex-1"
+                    placeholder="#f3f4f6"
+                  />
+                </div>
               </div>
             </div>
 

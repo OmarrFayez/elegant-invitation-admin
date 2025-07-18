@@ -215,6 +215,7 @@ export type Database = {
       }
       weddings: {
         Row: {
+          background_color: string | null
           background_image: string | null
           background_music: string | null
           bride_name: string | null
@@ -234,6 +235,7 @@ export type Database = {
           whish_account: string | null
         }
         Insert: {
+          background_color?: string | null
           background_image?: string | null
           background_music?: string | null
           bride_name?: string | null
@@ -253,6 +255,7 @@ export type Database = {
           whish_account?: string | null
         }
         Update: {
+          background_color?: string | null
           background_image?: string | null
           background_music?: string | null
           bride_name?: string | null
