@@ -338,22 +338,22 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
             </div>
 
             {/* Wedding Dashboard (user selection) */}
-            <div className="space-y-2">
-              <Label htmlFor="user_id">Wedding Dashboard</Label>
-              <select
-                id="user_id"
-                className="w-full border rounded p-2"
-                value={selectedUserId ?? ""}
-                onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
-              >
-                <option value="">Select a user</option>
-                {users.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="space-y-2">
+  <Label htmlFor="user_id">Wedding Dashboard</Label>
+  <select
+    id="user_id"
+    className="w-full border rounded p-2"
+    value={selectedUserId ?? ""}
+    onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
+  >
+    <option value="">Select a user</option>
+    {users.map((user) => (
+      <option key={user.user_id} value={user.user_id}>
+        {user.name}
+      </option>
+    ))}
+  </select>
+</div>
 
             {/* Buttons */}
             <div className="flex justify-end space-x-4">
