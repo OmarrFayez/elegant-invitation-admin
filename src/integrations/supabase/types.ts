@@ -229,6 +229,7 @@ export type Database = {
           location_url: string | null
           max_attendance: number | null
           phone_number: string | null
+          slug: string | null
           user_id: number | null
           wedding_date: string | null
           wedding_name: string
@@ -249,6 +250,7 @@ export type Database = {
           location_url?: string | null
           max_attendance?: number | null
           phone_number?: string | null
+          slug?: string | null
           user_id?: number | null
           wedding_date?: string | null
           wedding_name: string
@@ -269,6 +271,7 @@ export type Database = {
           location_url?: string | null
           max_attendance?: number | null
           phone_number?: string | null
+          slug?: string | null
           user_id?: number | null
           wedding_date?: string | null
           wedding_name?: string
@@ -289,7 +292,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_wedding_slug: {
+        Args: { groom_name: string; bride_name: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

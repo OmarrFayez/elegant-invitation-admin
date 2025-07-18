@@ -25,6 +25,7 @@ interface Wedding {
   background_image: string;
   background_music: string;
   background_color?: string;
+  slug?: string;
   user_id?: number;
 }
 
@@ -118,6 +119,20 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
         background_music: backgroundMusicPath,
         user_id: selectedUserId,
       };
+
+      // Generate slug for new weddings or when names change
+      if (!wedding || 
+          wedding.groom_name !== formData.groom_name || 
+          wedding.bride_name !== formData.bride_name) {
+        const { data: slugData, error: slugError } = await supabase
+          .rpc('generate_wedding_slug', {
+            groom_name: formData.groom_name,
+            bride_name: formData.bride_name
+          });
+        
+        if (slugError) throw slugError;
+        (weddingData as any).slug = slugData;
+      }
 
       if (wedding) {
         const { error } = await supabase

@@ -23,10 +23,11 @@ interface Wedding {
   location_url?: string;
   whish_account?: string;
   background_color?: string;
+  slug?: string;
 }
 
 const Invitation: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { idOrSlug } = useParams<{ idOrSlug: string }>();
   const [wedding, setWedding] = useState<Wedding | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState<{
@@ -40,14 +41,19 @@ const Invitation: React.FC = () => {
 
   useEffect(() => {
     const fetchWedding = async () => {
-      if (!id) return;
+      if (!idOrSlug) return;
 
       try {
-        const { data, error } = await supabase
-          .from('weddings')
-          .select('*')
-          .eq('id', parseInt(id))
-          .single();
+        let query = supabase.from('weddings').select('*');
+        
+        // Try to fetch by slug first, then by ID
+        if (isNaN(Number(idOrSlug))) {
+          query = query.eq('slug', idOrSlug);
+        } else {
+          query = query.eq('id', parseInt(idOrSlug));
+        }
+        
+        const { data, error } = await query.single();
 
         if (error) throw error;
         setWedding(data);
@@ -59,7 +65,7 @@ const Invitation: React.FC = () => {
     };
 
     fetchWedding();
-  }, [id]);
+  }, [idOrSlug]);
 
   useEffect(() => {
     if (!wedding?.wedding_date) return;
