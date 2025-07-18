@@ -19,6 +19,7 @@ export type Database = {
           date_added: string | null
           guest_name: string | null
           id: number
+          phone_number: string | null
           status: string | null
           wedding_id: number
         }
@@ -26,6 +27,7 @@ export type Database = {
           date_added?: string | null
           guest_name?: string | null
           id?: number
+          phone_number?: string | null
           status?: string | null
           wedding_id: number
         }
@@ -33,6 +35,7 @@ export type Database = {
           date_added?: string | null
           guest_name?: string | null
           id?: number
+          phone_number?: string | null
           status?: string | null
           wedding_id?: number
         }

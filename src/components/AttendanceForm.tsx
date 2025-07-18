@@ -15,6 +15,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
   const [status, setStatus] = useState<'Attending' | 'Not Attending' | ''>('');
   const [numberOfGuests, setNumberOfGuests] = useState<number>(1);
   const [guestNames, setGuestNames] = useState<string[]>(['']);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -35,6 +36,12 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
     setGuestNames(updatedNames);
   };
 
+  const handlePhoneNumberChange = (value: string) => {
+    // Only allow numbers and limit to 11 digits
+    const numbersOnly = value.replace(/\D/g, '').slice(0, 11);
+    setPhoneNumber(numbersOnly);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -42,6 +49,24 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
       toast({
         title: "Error",
         description: "Please select your attendance status",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!phoneNumber.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (phoneNumber.length < 10) {
+      toast({
+        title: "Error",
+        description: "Phone number must be at least 10 digits",
         variant: "destructive",
       });
       return;
@@ -59,11 +84,32 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
     setLoading(true);
 
     try {
+      // Check if phone number already exists
+      const { data: existingAttendance, error: checkError } = await supabase
+        .from('attendances')
+        .select('*')
+        .eq('wedding_id', weddingId)
+        .eq('phone_number', phoneNumber)
+        .limit(1);
+
+      if (checkError) throw checkError;
+
+      if (existingAttendance && existingAttendance.length > 0) {
+        toast({
+          title: "Already Submitted",
+          description: "You have already filled the form with this phone number.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       // Insert attendance records for each guest
       const attendanceData = guestNames.slice(0, numberOfGuests).map(name => ({
         wedding_id: weddingId,
         guest_name: name.trim(),
         status: status,
+        phone_number: phoneNumber,
       }));
 
       const { error } = await supabase
@@ -81,6 +127,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
       setStatus('');
       setNumberOfGuests(1);
       setGuestNames(['']);
+      setPhoneNumber('');
     } catch (error) {
       console.error('Error submitting attendance:', error);
       toast({
@@ -133,9 +180,30 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
             </Button>
           </div>
 
-          {/* Number of Guests */}
+          {/* Phone Number */}
           {(status === 'Attending' || status === 'Not Attending') && (
             <>
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber" className="text-primary font-semibold">
+                  Phone Number
+                </Label>
+                <Input
+                  id="phoneNumber"
+                  value={phoneNumber}
+                  onChange={(e) => handlePhoneNumberChange(e.target.value)}
+                  placeholder="Enter phone number (numbers only)"
+                  className="h-12"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={11}
+                  required
+                />
+                <p className="text-sm text-muted-foreground">
+                  Maximum 11 digits, numbers only
+                </p>
+              </div>
+
+              {/* Number of Guests */}
               <div className="space-y-2">
                 <Label htmlFor="numberOfGuests" className="text-primary font-semibold">
                   {status === 'Attending' ? 'Number of Guests Attending' : 'Number of Guests Not Attending'}
