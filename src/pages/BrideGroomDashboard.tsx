@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, MapPin, Users, Heart, Eye, EyeOff } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, Eye, EyeOff, LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Wedding {
   id: number;
@@ -29,6 +31,8 @@ const BrideGroomDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
   const { toast } = useToast();
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchUserWeddings();
@@ -100,6 +104,15 @@ const BrideGroomDashboard: React.FC = () => {
     fetchAttendance(wedding.id);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out",
+    });
+  };
+
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'Date not set';
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -143,9 +156,29 @@ const BrideGroomDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10 p-4">
       <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Wedding Dashboard</h1>
-          <p className="text-muted-foreground">View your wedding invitations and guest responses</p>
+        {/* Header with logout */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="text-center flex-1">
+            <h1 className="text-3xl font-bold mb-2">Wedding Dashboard</h1>
+            <p className="text-muted-foreground">View your wedding invitations and guest responses</p>
+          </div>
+          <div className="flex items-center gap-4">
+            {user && (
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Welcome back,</p>
+                <p className="font-medium">{user.name}</p>
+              </div>
+            )}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         </div>
 
         {/* Wedding Selection */}
