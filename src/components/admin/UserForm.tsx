@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import bcrypt from 'bcryptjs';
 
 interface Role {
   role_id: number;
@@ -74,13 +75,18 @@ export function UserForm({ user, onSuccess, onCancel }: UserFormProps) {
     setLoading(true);
 
     try {
-      const userData = {
+      const userData: any = {
         name: formData.name,
         email: formData.email,
         phone: formData.phone || null,
         role_id: formData.role_id ? parseInt(formData.role_id) : null,
-        ...(formData.password && { password: formData.password }),
       };
+
+      // Hash password if provided
+      if (formData.password) {
+        const hashedPassword = await bcrypt.hash(formData.password, 10);
+        userData.password = hashedPassword;
+      }
 
       if (user) {
         // Update existing user

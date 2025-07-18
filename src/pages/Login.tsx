@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff } from 'lucide-react';
+import bcrypt from 'bcryptjs';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -40,12 +41,17 @@ const Login: React.FC = () => {
       // Check if user exists in our custom users table
       const { data: userData, error: userError } = await supabase
         .from('users')
-        .select('user_id, email, name, role_id')
+        .select('user_id, email, name, role_id, password')
         .eq('email', email)
-        .eq('password', password) // In production, you should hash passwords
         .single();
 
       if (userError || !userData) {
+        throw new Error('Invalid email or password');
+      }
+
+      // Verify password using bcrypt
+      const isPasswordValid = await bcrypt.compare(password, userData.password);
+      if (!isPasswordValid) {
         throw new Error('Invalid email or password');
       }
 
