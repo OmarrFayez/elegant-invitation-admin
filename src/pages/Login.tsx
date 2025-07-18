@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff } from 'lucide-react';
 import bcrypt from 'bcryptjs';
@@ -16,22 +17,18 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login, user } = useAuth();
 
   // Check if user is already logged in
   useEffect(() => {
-    const checkUser = async () => {
-      const currentUser = localStorage.getItem('currentUser');
-      if (currentUser) {
-        const user = JSON.parse(currentUser);
-        if (user.role_id === 1) {
-          navigate('/admin');
-        } else {
-          navigate('/dashboard');
-        }
+    if (user) {
+      if (user.role_id === 1) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
       }
-    };
-    checkUser();
-  }, [navigate]);
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,20 +52,20 @@ const Login: React.FC = () => {
         throw new Error('Invalid email or password');
       }
 
-      // Create a session in localStorage to track the logged-in user
-      localStorage.setItem('currentUser', JSON.stringify(userData));
+      // Use the auth context login function to update state
+      login({
+        user_id: userData.user_id,
+        email: userData.email,
+        name: userData.name,
+        role_id: userData.role_id
+      });
 
       toast({
         title: "Success",
         description: "Logged in successfully",
       });
 
-      // Check user role to determine redirect
-      if (userData.role_id === 1) { // Assuming role_id 1 is admin
-        navigate('/admin');
-      } else {
-        navigate('/dashboard'); // Bride/Groom dashboard
-      }
+      // Navigation will be handled by the useEffect when user state updates
     } catch (error: any) {
       toast({
         title: "Error",
