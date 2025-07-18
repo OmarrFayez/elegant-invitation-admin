@@ -63,15 +63,6 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
       return;
     }
 
-    if (phoneNumber.length < 10) {
-      toast({
-        title: "Error",
-        description: "Phone number must be at least 10 digits",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if ((status === 'Attending' || status === 'Not Attending') && guestNames.some(name => !name.trim())) {
       toast({
         title: "Error", 
@@ -198,9 +189,6 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
                   maxLength={11}
                   required
                 />
-                <p className="text-sm text-muted-foreground">
-                  Maximum 11 digits, numbers only
-                </p>
               </div>
 
               {/* Number of Guests */}
