@@ -22,6 +22,7 @@ interface Wedding {
   location_text?: string;
   location_url?: string;
   whish_account?: string;
+  background_color?: string;
 }
 
 const Invitation: React.FC = () => {
@@ -161,11 +162,16 @@ const Invitation: React.FC = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image */}
-      {wedding.background_image && (
+      {/* Background */}
+      {wedding.background_image ? (
         <div
           className="fixed inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${wedding.background_image})` }}
+        />
+      ) : (
+        <div
+          className="fixed inset-0"
+          style={{ backgroundColor: wedding.background_color || '#f3f4f6' }}
         />
       )}
       
@@ -190,17 +196,25 @@ const Invitation: React.FC = () => {
         <div className="flex-1 flex items-center justify-center px-6 py-20">
           <div className="text-center text-white max-w-md mx-auto">
             {/* Names */}
-            <div className="mb-8">
-              <h1 className="font-script text-6xl md:text-7xl font-bold mb-2 leading-tight">
-                {wedding.groom_name}
-              </h1>
-              <div className="font-serif text-2xl md:text-3xl mb-2 opacity-90">
-                &
+            {(wedding.groom_name || wedding.bride_name) && (
+              <div className="mb-8">
+                {wedding.groom_name && (
+                  <h1 className="font-script text-6xl md:text-7xl font-bold mb-2 leading-tight">
+                    {wedding.groom_name}
+                  </h1>
+                )}
+                {wedding.groom_name && wedding.bride_name && (
+                  <div className="font-serif text-2xl md:text-3xl mb-2 opacity-90">
+                    &
+                  </div>
+                )}
+                {wedding.bride_name && (
+                  <h1 className="font-script text-6xl md:text-7xl font-bold leading-tight">
+                    {wedding.bride_name}
+                  </h1>
+                )}
               </div>
-              <h1 className="font-script text-6xl md:text-7xl font-bold leading-tight">
-                {wedding.bride_name}
-              </h1>
-            </div>
+            )}
 
             {/* Getting Married */}
             <div className="mb-8">
@@ -252,12 +266,14 @@ const Invitation: React.FC = () => {
             <div className="max-w-2xl mx-auto space-y-8">
               
               {/* Wedding Title */}
-              <div className="text-center mb-12">
-                <h2 className="font-script text-4xl md:text-5xl text-primary mb-4">
-                  {wedding.wedding_name}
-                </h2>
-                <div className="w-24 h-0.5 bg-primary/30 mx-auto"></div>
-              </div>
+              {wedding.wedding_name && (
+                <div className="text-center mb-12">
+                  <h2 className="font-script text-4xl md:text-5xl text-primary mb-4">
+                    {wedding.wedding_name}
+                  </h2>
+                  <div className="w-24 h-0.5 bg-primary/30 mx-auto"></div>
+                </div>
+              )}
 
               {/* Date and Location */}
               <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -310,30 +326,11 @@ const Invitation: React.FC = () => {
                 </div>
               )}
 
-              {/* Additional Info */}
-              {(wedding.max_attendance || wedding.phone_number || wedding.email) && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-                  {wedding.max_attendance && (
-                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
-                      <Users className="h-6 w-6 text-primary mx-auto mb-2" />
-                      <div className="text-sm font-semibold text-primary">Max Guests</div>
-                      <p className="text-gray-700">{wedding.max_attendance}</p>
-                    </div>
-                  )}
-                  
-                  {wedding.phone_number && (
-                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
-                      <div className="text-sm font-semibold text-primary mb-1">Contact</div>
-                      <p className="text-gray-700 text-sm">{wedding.phone_number}</p>
-                    </div>
-                  )}
-                  
-                  {wedding.email && (
-                    <div className="text-center p-4 bg-white rounded-xl shadow-md">
-                      <div className="text-sm font-semibold text-primary mb-1">Email</div>
-                      <p className="text-gray-700 text-sm">{wedding.email}</p>
-                    </div>
-                  )}
+              {/* Contact Info */}
+              {wedding.phone_number && (
+                <div className="text-center p-6 bg-white rounded-2xl shadow-lg mb-12">
+                  <div className="text-sm font-semibold text-primary mb-1">Contact</div>
+                  <p className="text-gray-700">{wedding.phone_number}</p>
                 </div>
               )}
 
