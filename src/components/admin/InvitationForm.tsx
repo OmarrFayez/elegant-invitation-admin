@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import RichTextEditor from "@/components/RichTextEditor";
@@ -24,6 +24,7 @@ interface Wedding {
   location_url: string;
   background_image: string;
   background_music: string;
+  user_id: number;
 }
 
 interface InvitationFormProps {
@@ -46,36 +47,48 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
     location_text: wedding?.location_text || "",
     location_url: wedding?.location_url || "",
   });
-  
+
+  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(wedding?.user_id || null);
+
   const [loading, setLoading] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
   const [backgroundMusic, setBackgroundMusic] = useState<File | null>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const { data, error } = await supabase.from("users").select("id, name");
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch users",
+          variant: "destructive",
+        });
+      } else {
+        setUsers(data);
+      }
+    };
+    fetchUsers();
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleFileUpload = async (file: File, path: string) => {
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${path}/${fileName}`;
 
-    const { error } = await supabase.storage
-      .from('wedding-files')
-      .upload(filePath, file);
-
+    const { error } = await supabase.storage.from("wedding-files").upload(filePath, file);
     if (error) throw error;
 
-    // Get the public URL for the uploaded file
-    const { data } = supabase.storage
-      .from('wedding-files')
-      .getPublicUrl(filePath);
-
+    const { data } = supabase.storage.from("wedding-files").getPublicUrl(filePath);
     return data.publicUrl;
   };
 
@@ -87,25 +100,24 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
       let backgroundImagePath = wedding?.background_image || "";
       let backgroundMusicPath = wedding?.background_music || "";
 
-      // Upload background image if selected
       if (backgroundImage) {
         backgroundImagePath = await handleFileUpload(backgroundImage, "images");
       }
-
-      // Upload background music if selected
       if (backgroundMusic) {
         backgroundMusicPath = await handleFileUpload(backgroundMusic, "music");
       }
 
       const weddingData = {
         ...formData,
-        max_attendance: formData.max_attendance ? parseInt(formData.max_attendance as string) : null,
+        max_attendance: formData.max_attendance
+          ? parseInt(formData.max_attendance as string)
+          : null,
         background_image: backgroundImagePath,
         background_music: backgroundMusicPath,
+        user_id: selectedUserId,
       };
 
       if (wedding) {
-        // Update existing wedding
         const { error } = await supabase
           .from("weddings")
           .update(weddingData)
@@ -118,10 +130,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
           description: "Wedding invitation updated successfully",
         });
       } else {
-        // Create new wedding
-        const { error } = await supabase
-          .from("weddings")
-          .insert([weddingData]);
+        const { error } = await supabase.from("weddings").insert([weddingData]);
 
         if (error) throw error;
 
@@ -163,12 +172,11 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
       <Card>
         <CardHeader>
           <CardTitle>Wedding Details</CardTitle>
-          <CardDescription>
-            Fill in the wedding information for the invitation card
-          </CardDescription>
+          <CardDescription>Fill in the wedding information</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Wedding Name and Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="wedding_name">Wedding Name *</Label>
@@ -192,6 +200,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
+            {/* Groom and Bride */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="groom_name">Groom Name</Label>
@@ -213,6 +222,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
+            {/* Contact Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="phone_number">Phone Number</Label>
@@ -235,24 +245,27 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
+            {/* Descriptions */}
             <div className="space-y-2">
               <Label htmlFor="description1">Description 1</Label>
               <RichTextEditor
                 value={formData.description1}
-                onChange={(value) => setFormData(prev => ({ ...prev, description1: value }))}
-                placeholder="Enter the first description..."
+                onChange={(value) =>
+                  setFormData(prev => ({ ...prev, description1: value }))
+                }
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="description2">Description 2</Label>
               <RichTextEditor
                 value={formData.description2}
-                onChange={(value) => setFormData(prev => ({ ...prev, description2: value }))}
-                placeholder="Enter the second description..."
+                onChange={(value) =>
+                  setFormData(prev => ({ ...prev, description2: value }))
+                }
               />
             </div>
 
+            {/* Attendance & Account */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="max_attendance">Max Attendance</Label>
@@ -275,6 +288,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
+            {/* Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="location_text">Location Text</Label>
@@ -297,6 +311,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
+            {/* File Upload */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="background_image">Background Image</Label>
@@ -304,7 +319,9 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
                   id="background_image"
                   type="file"
                   accept="image/*"
-                  onChange={(e) => setBackgroundImage(e.target.files?.[0] || null)}
+                  onChange={(e) =>
+                    setBackgroundImage(e.target.files?.[0] || null)
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -313,11 +330,32 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
                   id="background_music"
                   type="file"
                   accept="audio/*"
-                  onChange={(e) => setBackgroundMusic(e.target.files?.[0] || null)}
+                  onChange={(e) =>
+                    setBackgroundMusic(e.target.files?.[0] || null)
+                  }
                 />
               </div>
             </div>
 
+            {/* Wedding Dashboard (user selection) */}
+            <div className="space-y-2">
+              <Label htmlFor="user_id">Wedding Dashboard</Label>
+              <select
+                id="user_id"
+                className="w-full border rounded p-2"
+                value={selectedUserId ?? ""}
+                onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
+              >
+                <option value="">Select a user</option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Buttons */}
             <div className="flex justify-end space-x-4">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
