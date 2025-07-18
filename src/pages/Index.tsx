@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Users, Shield, BarChart3 } from "lucide-react";
+import { Heart, Users, Shield, BarChart3, Lock } from "lucide-react";
 
 const Index = () => {
   const features = [
@@ -29,6 +29,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5">
+      {/* Navigation */}
+      <nav className="p-6 flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <Heart className="h-8 w-8 text-primary" />
+          <span className="text-2xl font-bold">Wedding Invitations</span>
+        </div>
+        <Link to="/login">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Lock className="h-4 w-4" />
+            Login
+          </Button>
+        </Link>
+      </nav>
+
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center space-y-8">
@@ -43,8 +57,8 @@ const Index = () => {
           
           <div className="flex gap-4 justify-center">
             <Button asChild size="lg">
-              <Link to="/admin">
-                Access Admin Panel
+              <Link to="/login">
+                Get Started
               </Link>
             </Button>
           </div>
@@ -83,8 +97,8 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full">
-                <Link to="/admin">
-                  Access Admin Panel
+                <Link to="/login">
+                  Sign In
                 </Link>
               </Button>
             </CardContent>

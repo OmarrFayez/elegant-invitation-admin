@@ -11,6 +11,7 @@ import Users from "./pages/admin/Users";
 import Roles from "./pages/admin/Roles";
 import Invitation from "./pages/Invitation";
 import Login from "./pages/Login";
+import BrideGroomDashboard from "./pages/BrideGroomDashboard";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./hooks/useAuth";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/invitation/:id" element={<Invitation />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<BrideGroomDashboard />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="invitations" element={<Invitations />} />

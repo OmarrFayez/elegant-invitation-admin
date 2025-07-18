@@ -19,9 +19,14 @@ const Login: React.FC = () => {
   // Check if user is already logged in
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate('/admin');
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        const user = JSON.parse(currentUser);
+        if (user.role_id === 1) {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
       }
     };
     checkUser();
@@ -52,7 +57,12 @@ const Login: React.FC = () => {
         description: "Logged in successfully",
       });
 
-      navigate('/admin');
+      // Check user role to determine redirect
+      if (userData.role_id === 1) { // Assuming role_id 1 is admin
+        navigate('/admin');
+      } else {
+        navigate('/dashboard'); // Bride/Groom dashboard
+      }
     } catch (error: any) {
       toast({
         title: "Error",

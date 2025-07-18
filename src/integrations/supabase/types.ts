@@ -228,6 +228,7 @@ export type Database = {
           location_url: string | null
           max_attendance: number | null
           phone_number: string | null
+          user_id: number | null
           wedding_date: string | null
           wedding_name: string
           whish_account: string | null
@@ -246,6 +247,7 @@ export type Database = {
           location_url?: string | null
           max_attendance?: number | null
           phone_number?: string | null
+          user_id?: number | null
           wedding_date?: string | null
           wedding_name: string
           whish_account?: string | null
@@ -264,11 +266,20 @@ export type Database = {
           location_url?: string | null
           max_attendance?: number | null
           phone_number?: string | null
+          user_id?: number | null
           wedding_date?: string | null
           wedding_name?: string
           whish_account?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "weddings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
     }
     Views: {

@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import RichTextEditor from "@/components/RichTextEditor";
 
 interface Wedding {
   id: number;
@@ -237,23 +237,19 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
 
             <div className="space-y-2">
               <Label htmlFor="description1">Description 1</Label>
-              <Textarea
-                id="description1"
-                name="description1"
+              <RichTextEditor
                 value={formData.description1}
-                onChange={handleInputChange}
-                rows={3}
+                onChange={(value) => setFormData(prev => ({ ...prev, description1: value }))}
+                placeholder="Enter the first description..."
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="description2">Description 2</Label>
-              <Textarea
-                id="description2"
-                name="description2"
+              <RichTextEditor
                 value={formData.description2}
-                onChange={handleInputChange}
-                rows={3}
+                onChange={(value) => setFormData(prev => ({ ...prev, description2: value }))}
+                placeholder="Enter the second description..."
               />
             </div>
 

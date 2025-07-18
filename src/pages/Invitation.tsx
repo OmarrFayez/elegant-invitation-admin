@@ -92,23 +92,38 @@ const Invitation: React.FC = () => {
       audioRef.current.loop = true;
       audioRef.current.volume = 0.3;
       
+      // Improved autoplay handling
       if (!isMuted) {
-        audioRef.current.play().catch(() => {
-          // Auto-play might be blocked by browser
-        });
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((error) => {
+            console.log("Autoplay was prevented:", error);
+            // Show a user interaction prompt or button to enable audio
+          });
+        }
       }
     }
-  }, [wedding?.background_music, isMuted]);
+  }, [wedding?.background_music]);
+
+  // Handle mute state changes
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.pause();
+      } else {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Auto-play might be blocked by browser
+          });
+        }
+      }
+    }
+  }, [isMuted]);
 
   const toggleMute = () => {
     if (audioRef.current) {
-      if (isMuted) {
-        audioRef.current.play();
-        setIsMuted(false);
-      } else {
-        audioRef.current.pause();
-        setIsMuted(true);
-      }
+      setIsMuted(!isMuted);
     }
   };
 
@@ -278,16 +293,18 @@ const Invitation: React.FC = () => {
                 <div className="space-y-6 mb-12">
                   {wedding.description1 && (
                     <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
-                      <p className="text-gray-700 italic leading-relaxed font-serif text-lg">
-                        "{wedding.description1}"
-                      </p>
+                      <div 
+                        className="text-gray-700 leading-relaxed font-serif text-lg"
+                        dangerouslySetInnerHTML={{ __html: wedding.description1 }}
+                      />
                     </div>
                   )}
                   {wedding.description2 && (
                     <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
-                      <p className="text-gray-700 italic leading-relaxed font-serif text-lg">
-                        "{wedding.description2}"
-                      </p>
+                      <div 
+                        className="text-gray-700 leading-relaxed font-serif text-lg"
+                        dangerouslySetInnerHTML={{ __html: wedding.description2 }}
+                      />
                     </div>
                   )}
                 </div>
@@ -338,7 +355,19 @@ const Invitation: React.FC = () => {
 
       {/* Audio Element */}
       {wedding.background_music && (
-        <audio ref={audioRef} className="hidden" />
+        <audio 
+          ref={audioRef} 
+          className="hidden" 
+          preload="auto"
+          onCanPlayThrough={() => {
+            // Try to play when audio is ready
+            if (!isMuted && audioRef.current) {
+              audioRef.current.play().catch(() => {
+                // Autoplay blocked - user will need to interact first
+              });
+            }
+          }}
+        />
       )}
     </div>
   );

@@ -1,15 +1,17 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { 
   BarChart3, 
   Heart, 
   Users, 
   Shield, 
   Menu,
-  X
+  X,
+  LogOut
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const navigationItems = [
   {
@@ -37,6 +39,13 @@ const navigationItems = [
 export function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className={cn(
@@ -61,6 +70,9 @@ export function AdminSidebar() {
           <div className="px-4 py-6">
             <h2 className="text-lg font-semibold">Admin Panel</h2>
             <p className="text-sm text-muted-foreground">Wedding Invitations</p>
+            {user && (
+              <p className="text-xs text-muted-foreground mt-1">Welcome, {user.name}</p>
+            )}
           </div>
         )}
 
@@ -86,6 +98,19 @@ export function AdminSidebar() {
             );
           })}
         </nav>
+        
+        {/* Logout Button */}
+        <div className="mt-auto p-4 border-t">
+          <Button 
+            variant="outline" 
+            size={isCollapsed ? "icon" : "default"}
+            className={cn("w-full", isCollapsed && "justify-center")}
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4" />
+            {!isCollapsed && <span className="ml-2">Logout</span>}
+          </Button>
+        </div>
       </div>
     </div>
   );
