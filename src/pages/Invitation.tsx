@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Heart, Calendar, MapPin, Users, VolumeX, Volume2, CalendarPlus } from 'lucide-react';
+import { Heart, Calendar, MapPin, Users, VolumeX, Volume2, CalendarPlus, Play } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -37,6 +37,7 @@ const Invitation: React.FC = () => {
     seconds: number;
   }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isMuted, setIsMuted] = useState(false);
+  const [showPlayButton, setShowPlayButton] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -99,18 +100,18 @@ const Invitation: React.FC = () => {
       audioRef.current.loop = true;
       audioRef.current.volume = 0.3;
       
-      // Improved autoplay handling
+      // Try autoplay first
       if (!isMuted) {
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
           playPromise.catch((error) => {
             console.log("Autoplay was prevented:", error);
-            // Show a user interaction prompt or button to enable audio
+            setShowPlayButton(true); // Show play button when autoplay fails
           });
         }
       }
     }
-  }, [wedding?.background_music]);
+  }, [wedding?.background_music, isMuted]);
 
   // Handle mute state changes
   useEffect(() => {
@@ -131,6 +132,18 @@ const Invitation: React.FC = () => {
   const toggleMute = () => {
     if (audioRef.current) {
       setIsMuted(!isMuted);
+      setShowPlayButton(false); // Hide play button once user interacts
+    }
+  };
+
+  const playMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        setShowPlayButton(false);
+        setIsMuted(false);
+      }).catch(() => {
+        console.log("Still unable to play music");
+      });
     }
   };
 
@@ -233,6 +246,19 @@ END:VCALENDAR`;
       {/* Dark Overlay */}
       <div className="fixed inset-0 bg-black/40" />
       
+      {/* Play Music Button (when autoplay is blocked) */}
+      {wedding.background_music && showPlayButton && (
+        <Button
+          variant="default"
+          size="lg"
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 bg-primary/90 backdrop-blur-sm hover:bg-primary text-white border border-white/30 animate-pulse"
+          onClick={playMusic}
+        >
+          <Play className="h-5 w-5 mr-2" />
+          Play Wedding Music
+        </Button>
+      )}
+
       {/* Mute Button */}
       {wedding.background_music && (
         <Button
