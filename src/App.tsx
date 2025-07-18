@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Invitations from "./pages/admin/Invitations";
+import CustomizedInvitation from "./pages/admin/CustomizedInvitation";
 import Users from "./pages/admin/Users";
 import Roles from "./pages/admin/Roles";
 import Invitation from "./pages/Invitation";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="invitations" element={<Invitations />} />
+              <Route path="customized-invitation" element={<CustomizedInvitation />} />
               <Route path="users" element={<Users />} />
               <Route path="roles" element={<Roles />} />
             </Route>

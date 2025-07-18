@@ -2,6 +2,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { 
   BarChart3, 
   Heart, 
+  Palette,
   Users, 
   Shield, 
   Menu,
@@ -23,6 +24,11 @@ const navigationItems = [
     title: "Invitation Cards",
     href: "/admin/invitations",
     icon: Heart,
+  },
+  {
+    title: "Customized Invitation",
+    href: "/admin/customized-invitation",
+    icon: Palette,
   },
   {
     title: "Users",
