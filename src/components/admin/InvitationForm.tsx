@@ -337,7 +337,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
-            {/* Wedding Dashboard (user selection) */}
+            {/* Wedding Dashboard (user selection)
           <div className="space-y-2">
   <Label htmlFor="user_id">Wedding Dashboard</Label>
   <select
@@ -353,7 +353,47 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
       </option>
     ))}
   </select>
-</div>
+</div> */}
+
+const [users, setUsers] = useState([]);
+const [selectedUserId, setSelectedUserId] = useState(null);
+
+useEffect(() => {
+  const fetchUsers = async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id, name, email')
+      .order('name');
+
+    if (error) {
+      console.error('Error fetching users:', error);
+      return;
+    }
+
+    setUsers(data || []);
+  };
+
+  fetchUsers();
+}, []); // Empty dependency array means this runs once on component mount
+
+return (
+  <div>
+    <Label htmlFor="user_id">Wedding Dashboard</Label>
+    <select
+      id="user_id"
+      className="w-full border rounded p-2"
+      value={selectedUserId ?? ""}
+      onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
+    >
+      <option value="">Select a user</option>
+      {users.map((user) => (
+        <option key={user.user_id} value={user.user_id}>
+          {user.name}
+        </option>
+      ))}
+    </select>
+  </div>
+);
 
             {/* Buttons */}
             <div className="flex justify-end space-x-4">
