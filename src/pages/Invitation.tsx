@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Heart, Calendar, MapPin, Users, VolumeX, Volume2 } from 'lucide-react';
+import { Heart, Calendar, MapPin, Users, VolumeX, Volume2, CalendarPlus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -136,6 +136,50 @@ const Invitation: React.FC = () => {
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const addToCalendar = () => {
+    if (!wedding?.wedding_date) return;
+
+    const startDate = new Date(wedding.wedding_date);
+    const endDate = new Date(startDate.getTime() + 4 * 60 * 60 * 1000); // 4 hours later
+    
+    const formatDateForCalendar = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const eventDetails = {
+      title: wedding.wedding_name || `${wedding.groom_name} & ${wedding.bride_name} Wedding`,
+      start: formatDateForCalendar(startDate),
+      end: formatDateForCalendar(endDate),
+      location: wedding.location_text || '',
+      description: 'Join us to celebrate this special day!'
+    };
+
+    // Create ICS content
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding Invitation//Wedding Event//EN
+BEGIN:VEVENT
+UID:${Date.now()}@wedding-invitation.com
+DTSTART:${eventDetails.start}
+DTEND:${eventDetails.end}
+SUMMARY:${eventDetails.title}
+DESCRIPTION:${eventDetails.description}
+LOCATION:${eventDetails.location}
+END:VEVENT
+END:VCALENDAR`;
+
+    // Create blob and download
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${eventDetails.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   if (loading) {
@@ -281,7 +325,16 @@ const Invitation: React.FC = () => {
                   <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
                     <Calendar className="h-8 w-8 text-primary mx-auto mb-4" />
                     <h3 className="font-serif text-xl font-semibold text-primary mb-2">When</h3>
-                    <p className="text-gray-700 leading-relaxed">{formatDate(wedding.wedding_date)}</p>
+                    <p className="text-gray-700 leading-relaxed mb-3">{formatDate(wedding.wedding_date)}</p>
+                    <Button
+                      onClick={addToCalendar}
+                      variant="outline"
+                      size="sm"
+                      className="text-primary border-primary hover:bg-primary hover:text-white"
+                    >
+                      <CalendarPlus className="h-4 w-4 mr-2" />
+                      Add to Calendar
+                    </Button>
                   </div>
                 )}
                 
@@ -331,15 +384,6 @@ const Invitation: React.FC = () => {
                 <div className="text-center p-6 bg-white rounded-2xl shadow-lg mb-12">
                   <div className="text-sm font-semibold text-primary mb-1">Contact</div>
                   <p className="text-gray-700">{wedding.phone_number}</p>
-                </div>
-              )}
-
-              {/* Wish Account */}
-              {wedding.whish_account && (
-                <div className="text-center p-6 bg-white rounded-2xl shadow-lg mb-12">
-                  <Heart className="h-8 w-8 text-rose-500 mx-auto mb-4" />
-                  <h3 className="font-serif text-xl font-semibold text-primary mb-3">Wedding Wishes</h3>
-                  <p className="text-gray-700 leading-relaxed">{wedding.whish_account}</p>
                 </div>
               )}
 
