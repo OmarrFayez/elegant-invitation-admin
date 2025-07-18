@@ -337,7 +337,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
-            {/* Wedding Dashboard (user selection)
+            {/* Wedding Dashboard (user selection)*/}
           <div className="space-y-2">
   <Label htmlFor="user_id">Wedding Dashboard</Label>
   <select
@@ -353,9 +353,9 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
       </option>
     ))}
   </select>
-</div> */}
+</div> 
 
-const [users, setUsers] = useState([]);
+ {/*const [users, setUsers] = useState([]);
 const [selectedUserId, setSelectedUserId] = useState(null);
 
 useEffect(() => {
@@ -394,7 +394,7 @@ return (
     </select>
   </div>
 );
-
+*/}
             {/* Buttons */}
             <div className="flex justify-end space-x-4">
               <Button type="button" variant="outline" onClick={onClose}>
