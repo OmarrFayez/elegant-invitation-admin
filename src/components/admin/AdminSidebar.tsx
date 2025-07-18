@@ -26,8 +26,8 @@ const navigationItems = [
     icon: Heart,
   },
   {
-    title: "Customized Invitations",
-    href: "/admin/customized-invitations-list",
+    title: "Customized Invitation",
+    href: "/admin/customized-invitation",
     icon: Palette,
   },
   {

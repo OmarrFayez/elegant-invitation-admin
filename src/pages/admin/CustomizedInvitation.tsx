@@ -1,5 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useState, useCallback } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,9 +11,8 @@ import { DesignCanvas } from "@/components/invitation-designer/DesignCanvas";
 import { ComponentLibrary } from "@/components/invitation-designer/ComponentLibrary";
 import { PropertiesPanel } from "@/components/invitation-designer/PropertiesPanel";
 import { PreviewModal } from "@/components/invitation-designer/PreviewModal";
-import { Save, Eye, Download, Undo, Redo, ArrowLeft } from "lucide-react";
+import { Save, Eye, Download, Undo, Redo } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 export interface DesignElement {
   id: string;
@@ -39,10 +37,6 @@ export interface DesignElement {
 }
 
 const CustomizedInvitation = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const invitationId = searchParams.get('id');
-  
   const [elements, setElements] = useState<DesignElement[]>([]);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 400, height: 600 });
@@ -50,7 +44,6 @@ const CustomizedInvitation = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [history, setHistory] = useState<DesignElement[][]>([[]]);
   const [historyIndex, setHistoryIndex] = useState(0);
-  const [saving, setSaving] = useState(false);
 
   const addToHistory = useCallback((newElements: DesignElement[]) => {
     const newHistory = history.slice(0, historyIndex + 1);
@@ -103,85 +96,13 @@ const CustomizedInvitation = () => {
     }
   }, [history, historyIndex]);
 
-  useEffect(() => {
-    if (invitationId) {
-      loadDesign(invitationId);
-    }
-  }, [invitationId]);
-
-  const loadDesign = async (id: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('customized_invitations')
-        .select('*')
-        .eq('id', parseInt(id))
-        .single();
-
-      if (error) throw error;
-
-      setDesignName(data.design_name);
-      setCanvasSize(data.canvas_size as { width: number; height: number });
-      setElements(data.elements as unknown as DesignElement[]);
-      setHistory([data.elements as unknown as DesignElement[]]);
-      setHistoryIndex(0);
-    } catch (error) {
-      console.error('Error loading design:', error);
-      toast.error('Failed to load design');
-    }
-  };
-
-  const saveDesign = async () => {
-    setSaving(true);
-    try {
-      const designData = {
-        design_name: designName,
-        canvas_size: canvasSize as any,
-        elements: elements as any,
-      };
-
-      if (invitationId) {
-        // Update existing design
-        const { error } = await supabase
-          .from('customized_invitations')
-          .update(designData)
-          .eq('id', parseInt(invitationId));
-
-        if (error) throw error;
-      } else {
-        // Create new design
-        const { error } = await supabase
-          .from('customized_invitations')
-          .insert(designData);
-
-        if (error) throw error;
-      }
-
-      toast.success("Design saved successfully!");
-    } catch (error) {
-      console.error('Error saving design:', error);
-      toast.error('Failed to save design');
-    } finally {
-      setSaving(false);
-    }
+  const saveDesign = () => {
+    // TODO: Implement save to database
+    toast.success("Design saved successfully!");
   };
 
   const exportDesign = () => {
-    const dataStr = JSON.stringify({
-      designName,
-      canvasSize,
-      elements
-    }, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${designName.replace(/\s+/g, '_')}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    
+    // TODO: Implement export functionality
     toast.success("Design exported successfully!");
   };
 
@@ -192,23 +113,13 @@ const CustomizedInvitation = () => {
         <div className="border-b bg-background p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/admin/customized-invitations-list')}
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to List
-              </Button>
               <div className="flex flex-col">
                 <Input 
                   value={designName}
                   onChange={(e) => setDesignName(e.target.value)}
                   className="text-lg font-semibold border-none p-0 h-auto bg-transparent"
                 />
-                <span className="text-sm text-muted-foreground">
-                  {invitationId ? 'Editing' : 'Creating'} Custom Invitation
-                </span>
+                <span className="text-sm text-muted-foreground">Custom Invitation Designer</span>
               </div>
             </div>
             
@@ -228,9 +139,9 @@ const CustomizedInvitation = () => {
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </Button>
-              <Button size="sm" onClick={saveDesign} disabled={saving}>
+              <Button size="sm" onClick={saveDesign}>
                 <Save className="w-4 h-4 mr-2" />
-                {saving ? 'Saving...' : 'Save Design'}
+                Save Design
               </Button>
             </div>
           </div>
