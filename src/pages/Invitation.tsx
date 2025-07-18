@@ -326,42 +326,44 @@ END:VCALENDAR`;
               )}
 
               {/* Date and Location */}
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                {wedding.wedding_date && (
-                  <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
-                    <Calendar className="h-8 w-8 text-primary mx-auto mb-4" />
-                    <h3 className="font-serif text-xl font-semibold text-primary mb-2">When</h3>
-                    <p className="text-gray-700 leading-relaxed mb-3">{formatDate(wedding.wedding_date)}</p>
-                    <Button
-                      onClick={addToCalendar}
-                      variant="outline"
-                      size="sm"
-                      className="text-primary border-primary hover:bg-primary hover:text-white"
-                    >
-                      <CalendarPlus className="h-4 w-4 mr-2" />
-                      Add to Calendar
-                    </Button>
-                  </div>
-                )}
-                
-                {wedding.location_text && (
-                  <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
-                    <MapPin className="h-8 w-8 text-primary mx-auto mb-4" />
-                    <h3 className="font-serif text-xl font-semibold text-primary mb-2">Where</h3>
-                    <p className="text-gray-700 leading-relaxed mb-3">{wedding.location_text}</p>
-                    {wedding.location_url && (
-                      <a
-                        href={wedding.location_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline text-sm font-medium"
+              {(wedding.wedding_date || wedding.location_text) && (
+                <div className="grid md:grid-cols-2 gap-8 mb-12">
+                  {wedding.wedding_date && (
+                    <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+                      <Calendar className="h-8 w-8 text-primary mx-auto mb-4" />
+                      <h3 className="font-serif text-xl font-semibold text-primary mb-2">When</h3>
+                      <p className="text-gray-700 leading-relaxed mb-3">{formatDate(wedding.wedding_date)}</p>
+                      <Button
+                        onClick={addToCalendar}
+                        variant="outline"
+                        size="sm"
+                        className="text-primary border-primary hover:bg-primary hover:text-white"
                       >
-                        View on Map
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
+                        <CalendarPlus className="h-4 w-4 mr-2" />
+                        Add to Calendar
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {wedding.location_text && (
+                    <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+                      <MapPin className="h-8 w-8 text-primary mx-auto mb-4" />
+                      <h3 className="font-serif text-xl font-semibold text-primary mb-2">Where</h3>
+                      <p className="text-gray-700 leading-relaxed mb-3">{wedding.location_text}</p>
+                      {wedding.location_url && (
+                        <a
+                          href={wedding.location_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline text-sm font-medium"
+                        >
+                          View on Map
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Descriptions */}
               {(wedding.description1 || wedding.description2) && (
