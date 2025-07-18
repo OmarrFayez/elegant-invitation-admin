@@ -150,42 +150,47 @@ const Invitation: React.FC = () => {
     const startDate = new Date(wedding.wedding_date);
     const endDate = new Date(startDate.getTime() + 4 * 60 * 60 * 1000); // 4 hours later
     
-    const formatDateForCalendar = (date: Date) => {
+    const formatDateForUrl = (date: Date) => {
       return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     };
 
     const eventDetails = {
-      title: wedding.wedding_name || `${wedding.groom_name} & ${wedding.bride_name} Wedding`,
-      start: formatDateForCalendar(startDate),
-      end: formatDateForCalendar(endDate),
-      location: wedding.location_text || '',
-      description: 'Join us to celebrate this special day!'
+      title: encodeURIComponent(wedding.wedding_name || `${wedding.groom_name} & ${wedding.bride_name} Wedding`),
+      start: formatDateForUrl(startDate),
+      end: formatDateForUrl(endDate),
+      location: encodeURIComponent(wedding.location_text || ''),
+      description: encodeURIComponent('Join us to celebrate this special day!')
     };
 
-    // Create ICS content
-    const icsContent = `BEGIN:VCALENDAR
+    // Detect device and open appropriate calendar
+    const userAgent = navigator.userAgent || navigator.vendor;
+    
+    // For mobile devices, try to open native calendar
+    if (/android/i.test(userAgent)) {
+      // Android Calendar
+      const androidUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventDetails.title}&dates=${eventDetails.start}/${eventDetails.end}&location=${eventDetails.location}&details=${eventDetails.description}`;
+      window.open(androidUrl, '_blank');
+    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+      // iOS Calendar - try native first, fallback to Google
+      const iosUrl = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Wedding Invitation//Wedding Event//EN
 BEGIN:VEVENT
-UID:${Date.now()}@wedding-invitation.com
+URL:${window.location.href}
 DTSTART:${eventDetails.start}
 DTEND:${eventDetails.end}
-SUMMARY:${eventDetails.title}
-DESCRIPTION:${eventDetails.description}
-LOCATION:${eventDetails.location}
+SUMMARY:${decodeURIComponent(eventDetails.title)}
+DESCRIPTION:${decodeURIComponent(eventDetails.description)}
+LOCATION:${decodeURIComponent(eventDetails.location)}
 END:VEVENT
 END:VCALENDAR`;
-
-    // Create blob and download
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${eventDetails.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+      
+      // Try to open with native calendar
+      window.location.href = iosUrl;
+    } else {
+      // Desktop - open Google Calendar
+      const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventDetails.title}&dates=${eventDetails.start}/${eventDetails.end}&location=${eventDetails.location}&details=${eventDetails.description}`;
+      window.open(googleUrl, '_blank');
+    }
   };
 
   if (loading) {
