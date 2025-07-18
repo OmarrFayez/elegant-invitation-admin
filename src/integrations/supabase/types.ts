@@ -49,6 +49,50 @@ export type Database = {
           },
         ]
       }
+      customized_invitations: {
+        Row: {
+          canvas_size: Json
+          created_at: string
+          design_name: string
+          elements: Json
+          id: number
+          is_published: boolean
+          slug: string | null
+          updated_at: string
+          user_id: number | null
+        }
+        Insert: {
+          canvas_size?: Json
+          created_at?: string
+          design_name: string
+          elements?: Json
+          id?: number
+          is_published?: boolean
+          slug?: string | null
+          updated_at?: string
+          user_id?: number | null
+        }
+        Update: {
+          canvas_size?: Json
+          created_at?: string
+          design_name?: string
+          elements?: Json
+          id?: number
+          is_published?: boolean
+          slug?: string | null
+          updated_at?: string
+          user_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customized_invitations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       modules: {
         Row: {
           created_at: string | null
@@ -295,6 +339,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_customized_invitation_slug: {
+        Args: { design_name: string }
+        Returns: string
+      }
       generate_wedding_slug: {
         Args: { groom_name: string; bride_name: string }
         Returns: string

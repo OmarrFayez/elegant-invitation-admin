@@ -8,9 +8,11 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Invitations from "./pages/admin/Invitations";
 import CustomizedInvitation from "./pages/admin/CustomizedInvitation";
+import CustomizedInvitationsList from "./pages/admin/CustomizedInvitationsList";
 import Users from "./pages/admin/Users";
 import Roles from "./pages/admin/Roles";
 import Invitation from "./pages/Invitation";
+import CustomInvitationPreview from "./pages/CustomInvitationPreview";
 import Login from "./pages/Login";
 import BrideGroomDashboard from "./pages/BrideGroomDashboard";
 import NotFound from "./pages/NotFound";
@@ -28,12 +30,14 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/invitation/:idOrSlug" element={<Invitation />} />
+            <Route path="/custom-invitation/:slug" element={<CustomInvitationPreview />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<BrideGroomDashboard />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="invitations" element={<Invitations />} />
               <Route path="customized-invitation" element={<CustomizedInvitation />} />
+              <Route path="customized-invitations-list" element={<CustomizedInvitationsList />} />
               <Route path="users" element={<Users />} />
               <Route path="roles" element={<Roles />} />
             </Route>
