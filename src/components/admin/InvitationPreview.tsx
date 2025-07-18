@@ -177,47 +177,49 @@ const InvitationPreview: React.FC<InvitationPreviewProps> = ({ wedding, onClose 
             )}
 
             {/* Date and Location */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {wedding.wedding_date && (
-                <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <Calendar className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-primary">Wedding Date</h3>
+            {(wedding.wedding_date || wedding.location_text) && (
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                {wedding.wedding_date && (
+                  <div className="bg-white/90 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                      <Calendar className="h-5 w-5 text-primary" />
+                      <h3 className="font-semibold text-primary">Wedding Date</h3>
+                    </div>
+                    <p className="text-foreground">{formatDate(wedding.wedding_date)}</p>
                   </div>
-                  <p className="text-foreground">{formatDate(wedding.wedding_date)}</p>
-                </div>
-              )}
-              
-              {wedding.location_text && (
-                <div className="bg-white/90 rounded-lg p-6 shadow-lg">
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-primary">Location</h3>
+                )}
+                
+                {wedding.location_text && (
+                  <div className="bg-white/90 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                      <MapPin className="h-5 w-5 text-primary" />
+                      <h3 className="font-semibold text-primary">Location</h3>
+                    </div>
+                    <p className="text-foreground">{wedding.location_text}</p>
+                    {wedding.location_url && (
+                      <a
+                        href={wedding.location_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline text-sm mt-2 inline-block"
+                      >
+                        View on Map
+                      </a>
+                    )}
                   </div>
-                  <p className="text-foreground">{wedding.location_text}</p>
-                  {wedding.location_url && (
-                    <a
-                      href={wedding.location_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline text-sm mt-2 inline-block"
-                    >
-                      View on Map
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
 
             {/* Descriptions */}
-            {(wedding.description1 || wedding.description2) && (
+            {(wedding.description1?.trim() || wedding.description2?.trim()) && (
               <div className="space-y-4 mb-8">
-                {wedding.description1 && (
+                {wedding.description1?.trim() && (
                   <div className="bg-white/90 rounded-lg p-6 shadow-lg">
                     <p className="text-foreground italic">{wedding.description1}</p>
                   </div>
                 )}
-                {wedding.description2 && (
+                {wedding.description2?.trim() && (
                   <div className="bg-white/90 rounded-lg p-6 shadow-lg">
                     <p className="text-foreground italic">{wedding.description2}</p>
                   </div>
@@ -226,31 +228,33 @@ const InvitationPreview: React.FC<InvitationPreviewProps> = ({ wedding, onClose 
             )}
 
             {/* Additional Info */}
-            <div className="grid md:grid-cols-3 gap-4">
-              {wedding.max_attendance && (
-                <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                  <div className="flex items-center justify-center gap-2 mb-1">
-                    <Users className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold text-primary">Max Guests</span>
+            {(wedding.max_attendance || wedding.phone_number || wedding.email) && (
+              <div className="grid md:grid-cols-3 gap-4">
+                {wedding.max_attendance && (
+                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                      <Users className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-semibold text-primary">Max Guests</span>
+                    </div>
+                    <p className="text-foreground">{wedding.max_attendance}</p>
                   </div>
-                  <p className="text-foreground">{wedding.max_attendance}</p>
-                </div>
-              )}
-              
-              {wedding.phone_number && (
-                <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                  <div className="text-sm font-semibold text-primary mb-1">Contact</div>
-                  <p className="text-foreground text-sm">{wedding.phone_number}</p>
-                </div>
-              )}
-              
-              {wedding.email && (
-                <div className="bg-white/90 rounded-lg p-4 shadow-lg">
-                  <div className="text-sm font-semibold text-primary mb-1">Email</div>
-                  <p className="text-foreground text-sm">{wedding.email}</p>
-                </div>
-              )}
-            </div>
+                )}
+                
+                {wedding.phone_number && (
+                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
+                    <div className="text-sm font-semibold text-primary mb-1">Contact</div>
+                    <p className="text-foreground text-sm">{wedding.phone_number}</p>
+                  </div>
+                )}
+                
+                {wedding.email && (
+                  <div className="bg-white/90 rounded-lg p-4 shadow-lg">
+                    <div className="text-sm font-semibold text-primary mb-1">Email</div>
+                    <p className="text-foreground text-sm">{wedding.email}</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Wish Account */}
             {wedding.whish_account && (
