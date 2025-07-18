@@ -366,9 +366,9 @@ END:VCALENDAR`;
               )}
 
               {/* Descriptions */}
-              {(wedding.description1 || wedding.description2) && (
+              {(wedding.description1?.trim() || wedding.description2?.trim()) && (
                 <div className="space-y-6 mb-12">
-                  {wedding.description1 && (
+                  {wedding.description1?.trim() && (
                     <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
                       <div 
                         className="text-gray-700 leading-relaxed font-serif text-lg"
@@ -376,7 +376,7 @@ END:VCALENDAR`;
                       />
                     </div>
                   )}
-                  {wedding.description2 && (
+                  {wedding.description2?.trim() && (
                     <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
                       <div 
                         className="text-gray-700 leading-relaxed font-serif text-lg"
