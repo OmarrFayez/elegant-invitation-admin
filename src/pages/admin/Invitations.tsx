@@ -27,6 +27,7 @@ interface Wedding {
   background_image: string;
   background_music: string;
   date_added: string;
+  user_id?: number;
 }
 
 const Invitations = () => {

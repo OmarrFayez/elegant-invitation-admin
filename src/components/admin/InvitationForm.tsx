@@ -24,7 +24,7 @@ interface Wedding {
   location_url: string;
   background_image: string;
   background_music: string;
-  user_id: number;
+  user_id?: number;
 }
 
 interface InvitationFormProps {
@@ -48,7 +48,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
     location_url: wedding?.location_url || "",
   });
 
-  const [users, setUsers] = useState<{ id: number; name: string }[]>([]);
+  const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(wedding?.user_id || null);
 
   const [loading, setLoading] = useState(false);
@@ -58,7 +58,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data, error } = await supabase.from("users").select("id, name");
+      const { data, error } = await supabase.from("users").select("user_id, name");
       if (error) {
         toast({
           title: "Error",
@@ -337,64 +337,24 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
               </div>
             </div>
 
-            {/* Wedding Dashboard (user selection)*/}
-          <div className="space-y-2">
-  <Label htmlFor="user_id">Wedding Dashboard</Label>
-  <select
-    id="user_id"
-    className="w-full border rounded p-2"
-    value={selectedUserId ?? ""}
-    onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
-  >
-    <option value="">Select a user</option>
-    {users.map((user) => (
-      <option key={user.user_id} value={user.user_id}>
-        {user.name}
-      </option>
-    ))}
-  </select>
-</div> 
+            {/* Wedding Dashboard (user selection) */}
+            <div className="space-y-2">
+              <Label htmlFor="user_id">Wedding Dashboard</Label>
+              <select
+                id="user_id"
+                className="w-full border rounded p-2"
+                value={selectedUserId ?? ""}
+                onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
+              >
+                <option value="">Select a user</option>
+                {users.map((user) => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
- {/*const [users, setUsers] = useState([]);
-const [selectedUserId, setSelectedUserId] = useState(null);
-
-useEffect(() => {
-  const fetchUsers = async () => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('user_id, name, email')
-      .order('name');
-
-    if (error) {
-      console.error('Error fetching users:', error);
-      return;
-    }
-
-    setUsers(data || []);
-  };
-
-  fetchUsers();
-}, []); // Empty dependency array means this runs once on component mount
-
-return (
-  <div>
-    <Label htmlFor="user_id">Wedding Dashboard</Label>
-    <select
-      id="user_id"
-      className="w-full border rounded p-2"
-      value={selectedUserId ?? ""}
-      onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
-    >
-      <option value="">Select a user</option>
-      {users.map((user) => (
-        <option key={user.user_id} value={user.user_id}>
-          {user.name}
-        </option>
-      ))}
-    </select>
-  </div>
-);
-*/}
             {/* Buttons */}
             <div className="flex justify-end space-x-4">
               <Button type="button" variant="outline" onClick={onClose}>
