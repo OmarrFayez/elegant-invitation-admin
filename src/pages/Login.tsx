@@ -19,15 +19,31 @@ const Login: React.FC = () => {
   const { toast } = useToast();
   const { login, user } = useAuth();
 
-  // Check if user is already logged in
+  // Check if user is already logged in and redirect accordingly
   useEffect(() => {
-    if (user) {
-      if (user.role_id === 1) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
+    const redirectUser = async () => {
+      if (user) {
+        if (user.role_id === 1) {
+          navigate('/admin');
+        } else {
+          // Check if user has event view permissions
+          const { data: rolePermissions } = await supabase
+            .from('role_permissions')
+            .select('can_view')
+            .eq('role_id', user.role_id)
+            .eq('module_id', 10) // Events module
+            .single();
+
+          if (rolePermissions?.can_view) {
+            navigate('/event-dashboard');
+          } else {
+            navigate('/wedding-dashboard');
+          }
+        }
       }
-    }
+    };
+
+    redirectUser();
   }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
