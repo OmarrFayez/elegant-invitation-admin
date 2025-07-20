@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, MapPin, Users, CalendarDays, Eye, EyeOff, LogOut, ChevronDown, ChevronRight } from 'lucide-react';
+import { Calendar, MapPin, Users, CalendarDays, Eye, EyeOff, LogOut, ChevronDown, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
@@ -224,6 +224,15 @@ const EventDashboard: React.FC = () => {
             <p className="text-muted-foreground">View your event invitations and guest responses</p>
           </div>
           <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/login')}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Login
+            </Button>
             {user && (
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Welcome back,</p>
