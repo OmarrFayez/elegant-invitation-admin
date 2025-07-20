@@ -14,6 +14,7 @@ import Invitation from "./pages/Invitation";
 import EventInvitation from "./pages/EventInvitation";
 import Login from "./pages/Login";
 import BrideGroomDashboard from "./pages/BrideGroomDashboard";
+import EventDashboard from "./pages/EventDashboard";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./hooks/useAuth";
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/event/:idOrSlug" element={<EventInvitation />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<BrideGroomDashboard />} />
+            <Route path="/event-dashboard" element={<EventDashboard />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="invitations" element={<Invitations />} />
