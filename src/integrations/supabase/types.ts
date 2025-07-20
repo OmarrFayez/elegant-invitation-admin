@@ -93,6 +93,33 @@ export type Database = {
           },
         ]
       }
+      event_attendances: {
+        Row: {
+          date_added: string | null
+          event_id: number
+          guest_name: string | null
+          id: number
+          phone_number: string | null
+          status: string | null
+        }
+        Insert: {
+          date_added?: string | null
+          event_id: number
+          guest_name?: string | null
+          id?: number
+          phone_number?: string | null
+          status?: string | null
+        }
+        Update: {
+          date_added?: string | null
+          event_id?: number
+          guest_name?: string | null
+          id?: number
+          phone_number?: string | null
+          status?: string | null
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           background_color: string | null

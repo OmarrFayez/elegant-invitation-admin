@@ -25,6 +25,11 @@ const navigationItems = [
     icon: Heart,
   },
   {
+    title: "Events Invitation",
+    href: "/admin/events",
+    icon: Heart,
+  },
+  {
     title: "Users",
     href: "/admin/users",
     icon: Users,
