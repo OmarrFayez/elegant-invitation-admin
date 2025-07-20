@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, MapPin, Users, Heart, Eye, EyeOff, LogOut } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, Eye, EyeOff, LogOut, ChevronDown, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface Wedding {
   id: number;
@@ -22,6 +23,13 @@ interface Attendance {
   guest_name: string;
   status: string;
   date_added: string;
+  phone_number?: string;
+}
+
+interface GroupedGuests {
+  phoneNumber: string;
+  guests: Attendance[];
+  primaryGuest: Attendance;
 }
 
 const BrideGroomDashboard: React.FC = () => {
@@ -125,6 +133,27 @@ const BrideGroomDashboard: React.FC = () => {
 
   const attendingGuests = attendances.filter(a => a.status === 'Attending');
   const notAttendingGuests = attendances.filter(a => a.status === 'Not Attending');
+
+  // Group guests by phone number
+  const groupGuestsByPhone = (guests: Attendance[]): GroupedGuests[] => {
+    const grouped = guests.reduce((acc, guest) => {
+      const phone = guest.phone_number || 'no-phone';
+      if (!acc[phone]) {
+        acc[phone] = [];
+      }
+      acc[phone].push(guest);
+      return acc;
+    }, {} as Record<string, Attendance[]>);
+
+    return Object.entries(grouped).map(([phoneNumber, guestList]) => ({
+      phoneNumber,
+      guests: guestList,
+      primaryGuest: guestList[0], // First guest as primary
+    }));
+  };
+
+  const groupedAttendingGuests = groupGuestsByPhone(attendingGuests);
+  const groupedNotAttendingGuests = groupGuestsByPhone(notAttendingGuests);
 
   if (loading) {
     return (
@@ -273,15 +302,14 @@ const BrideGroomDashboard: React.FC = () => {
                 <CardContent>
                   {attendanceLoading ? (
                     <div className="text-center py-4">Loading guest list...</div>
-                  ) : attendingGuests.length > 0 ? (
+                  ) : groupedAttendingGuests.length > 0 ? (
                     <div className="space-y-2">
-                      {attendingGuests.map((guest) => (
-                        <div key={guest.id} className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                          <span className="font-medium">{guest.guest_name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {new Date(guest.date_added).toLocaleDateString()}
-                          </span>
-                        </div>
+                      {groupedAttendingGuests.map((group, index) => (
+                        <GuestGroup 
+                          key={`attending-${group.phoneNumber}-${index}`} 
+                          group={group} 
+                          bgColor="bg-green-50" 
+                        />
                       ))}
                     </div>
                   ) : (
@@ -298,15 +326,14 @@ const BrideGroomDashboard: React.FC = () => {
                 <CardContent>
                   {attendanceLoading ? (
                     <div className="text-center py-4">Loading guest list...</div>
-                  ) : notAttendingGuests.length > 0 ? (
+                  ) : groupedNotAttendingGuests.length > 0 ? (
                     <div className="space-y-2">
-                      {notAttendingGuests.map((guest) => (
-                        <div key={guest.id} className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                          <span className="font-medium">{guest.guest_name}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {new Date(guest.date_added).toLocaleDateString()}
-                          </span>
-                        </div>
+                      {groupedNotAttendingGuests.map((group, index) => (
+                        <GuestGroup 
+                          key={`not-attending-${group.phoneNumber}-${index}`} 
+                          group={group} 
+                          bgColor="bg-red-50" 
+                        />
                       ))}
                     </div>
                   ) : (
@@ -319,6 +346,65 @@ const BrideGroomDashboard: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+// Guest Group Component for collapsible guest lists
+interface GuestGroupProps {
+  group: GroupedGuests;
+  bgColor: string;
+}
+
+const GuestGroup: React.FC<GuestGroupProps> = ({ group, bgColor }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const hasMultipleGuests = group.guests.length > 1;
+
+  if (!hasMultipleGuests) {
+    // Single guest - display normally
+    return (
+      <div className={`flex justify-between items-center p-3 ${bgColor} rounded-lg`}>
+        <span className="font-medium">{group.primaryGuest.guest_name}</span>
+        <span className="text-sm text-muted-foreground">
+          {new Date(group.primaryGuest.date_added).toLocaleDateString()}
+        </span>
+      </div>
+    );
+  }
+
+  // Multiple guests - display as collapsible
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger asChild>
+        <div className={`flex justify-between items-center p-3 ${bgColor} rounded-lg cursor-pointer hover:opacity-80 transition-opacity`}>
+          <div className="flex items-center gap-2">
+            {isOpen ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+            <span className="font-medium">{group.primaryGuest.guest_name}</span>
+            <span className="text-sm text-muted-foreground">
+              (+{group.guests.length - 1} more)
+            </span>
+          </div>
+          <span className="text-sm text-muted-foreground">
+            {new Date(group.primaryGuest.date_added).toLocaleDateString()}
+          </span>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-1">
+        <div className="ml-6 space-y-1">
+          {group.guests.slice(1).map((guest) => (
+            <div key={guest.id} className={`flex justify-between items-center p-2 ${bgColor} rounded border-l-2 border-primary/30`}>
+              <span className="text-sm">{guest.guest_name}</span>
+              <span className="text-xs text-muted-foreground">
+                {new Date(guest.date_added).toLocaleDateString()}
+              </span>
+            </div>
+          ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 
