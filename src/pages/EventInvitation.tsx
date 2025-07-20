@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Calendar, VolumeX, Volume2, ArrowLeft } from "lucide-react";
+import EventAttendanceForm from "@/components/EventAttendanceForm";
 
 interface Event {
   id: number;
@@ -310,6 +311,11 @@ const EventInvitation = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Attendance Form */}
+        <div className="w-full max-w-2xl mt-8">
+          <EventAttendanceForm eventId={event.id} />
+        </div>
 
         {/* Floating Countdown */}
         <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 border border-white/30">

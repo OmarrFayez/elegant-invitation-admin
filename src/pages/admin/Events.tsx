@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import EventForm from "@/components/admin/EventForm";
 import EventAttendeesList from "@/components/admin/EventAttendeesList";
-import EventPreview from "@/components/admin/EventPreview";
 
 interface Event {
   id: number;
@@ -182,18 +181,6 @@ const Events = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <EventPreview
-                          event={event}
-                          trigger={
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              title="Preview Event"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          }
-                        />
                         <Button
                           variant="ghost"
                           size="icon"
