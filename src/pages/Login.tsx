@@ -37,7 +37,7 @@ const Login: React.FC = () => {
           if (rolePermissions?.can_view) {
             navigate('/event-dashboard');
           } else {
-            navigate('/wedding-dashboard');
+            navigate('/dashboard');
           }
         }
       }
