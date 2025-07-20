@@ -183,7 +183,7 @@ const Events = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => window.open(`/event/${event.slug || event.id}`, '_blank')}
+                          onClick={() => window.open(`${window.location.origin}/event/${event.slug || event.id}`, '_blank')}
                           title="View Event Invitation"
                         >
                           <ExternalLink className="h-4 w-4" />
