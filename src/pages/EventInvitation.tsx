@@ -266,14 +266,13 @@ const EventInvitation = () => {
           <CardContent className="p-8">
             {event.description1 && (
               <div className="mb-6">
-                <h2 className="text-2xl font-bold mb-3 text-center">{event.description1}</h2>
+                <h2 className="text-2xl font-bold mb-3 text-center" dangerouslySetInnerHTML={{ __html: event.description1 }}></h2>
               </div>
             )}
 
             {event.description2 && (
               <div className="mb-8">
-                <p className="text-lg leading-relaxed text-center text-white/90">
-                  {event.description2}
+                <p className="text-lg leading-relaxed text-center text-white/90" dangerouslySetInnerHTML={{ __html: event.description2 }}>
                 </p>
               </div>
             )}
@@ -326,15 +325,6 @@ const EventInvitation = () => {
           <EventAttendanceForm eventId={event.id} />
         </div>
 
-        {/* Floating Countdown */}
-        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 border border-white/30">
-          <div className="text-white text-sm font-medium">
-            {countdown.days > 0 ? `${countdown.days} days ${countdown.hours} hours left` : 
-             countdown.hours > 0 ? `${countdown.hours} hours ${countdown.minutes} minutes left` :
-             countdown.minutes > 0 ? `${countdown.minutes} minutes left` :
-             countdown.seconds > 0 ? `${countdown.seconds} seconds left` : 'Event time!'}
-          </div>
-        </div>
       </div>
     </div>
   );
