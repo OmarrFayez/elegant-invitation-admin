@@ -406,6 +406,10 @@ export type Database = {
         Args: { design_name: string }
         Returns: string
       }
+      generate_event_slug: {
+        Args: { event_name: string }
+        Returns: string
+      }
       generate_wedding_slug: {
         Args: { groom_name: string; bride_name: string }
         Returns: string
