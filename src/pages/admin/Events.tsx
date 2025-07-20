@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import EventForm from "@/components/admin/EventForm";
 import EventAttendeesList from "@/components/admin/EventAttendeesList";
+import EventPreview from "@/components/admin/EventPreview";
 
 interface Event {
   id: number;
@@ -180,10 +182,22 @@ const Events = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
+                        <EventPreview
+                          event={event}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              title="Preview Event"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => window.open(`/event/${event.slug || event.id}`, '_blank')}
+                          onClick={() => window.open(`${window.location.origin}/event/${event.slug || event.id}`, '_blank')}
                           title="View Event Invitation"
                         >
                           <ExternalLink className="h-4 w-4" />
