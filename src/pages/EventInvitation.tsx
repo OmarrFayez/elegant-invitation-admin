@@ -35,11 +35,20 @@ const EventInvitation = () => {
 
   const fetchEvent = async () => {
     try {
-      const { data, error } = await supabase
-        .from("events")
-        .select("*")
-        .or(`id.eq.${idOrSlug},slug.eq.${idOrSlug}`)
-        .maybeSingle();
+      // Check if idOrSlug is a number (for id) or string (for slug)
+      const isNumeric = !isNaN(Number(idOrSlug));
+      
+      let query = supabase.from("events").select("*");
+      
+      if (isNumeric) {
+        // If numeric, search by both id and slug
+        query = query.or(`id.eq.${idOrSlug},slug.eq.${idOrSlug}`);
+      } else {
+        // If not numeric, only search by slug
+        query = query.eq('slug', idOrSlug);
+      }
+      
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       if (!data) {
