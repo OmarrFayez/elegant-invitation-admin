@@ -93,10 +93,11 @@ const EventDashboard: React.FC = () => {
         return;
       }
       
-      // Fetch all events (user has view permission)
+      // Fetch events assigned to the current user
       const { data, error } = await supabase
         .from('events')
         .select('*')
+        .eq('user_id', user.user_id)
         .order('event_date', { ascending: true });
 
       if (error) throw error;
