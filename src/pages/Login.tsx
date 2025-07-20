@@ -26,15 +26,14 @@ const Login: React.FC = () => {
         if (user.role_id === 1) {
           navigate('/admin');
         } else {
-          // Check if user has event view permissions
-          const { data: rolePermissions } = await supabase
-            .from('role_permissions')
-            .select('can_view')
+          // Get user's role name to determine redirect
+          const { data: roleData } = await supabase
+            .from('roles')
+            .select('role_name')
             .eq('role_id', user.role_id)
-            .eq('module_id', 10) // Events module
             .single();
 
-          if (rolePermissions?.can_view) {
+          if (roleData?.role_name === 'Event View') {
             navigate('/event-dashboard');
           } else {
             navigate('/dashboard');
