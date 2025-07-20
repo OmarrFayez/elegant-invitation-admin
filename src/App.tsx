@@ -11,7 +11,6 @@ import Events from "./pages/admin/Events";
 import Users from "./pages/admin/Users";
 import Roles from "./pages/admin/Roles";
 import Invitation from "./pages/Invitation";
-import EventInvitation from "./pages/EventInvitation";
 import Login from "./pages/Login";
 import BrideGroomDashboard from "./pages/BrideGroomDashboard";
 import NotFound from "./pages/NotFound";
@@ -29,7 +28,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/invitation/:idOrSlug" element={<Invitation />} />
-            <Route path="/event/:idOrSlug" element={<EventInvitation />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<BrideGroomDashboard />} />
             <Route path="/admin" element={<AdminLayout />}>
