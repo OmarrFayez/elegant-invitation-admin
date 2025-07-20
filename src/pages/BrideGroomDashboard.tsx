@@ -178,7 +178,10 @@ const BrideGroomDashboard: React.FC = () => {
             </p>
             <Button 
               variant="outline" 
-              onClick={() => navigate('/login')}
+              onClick={() => {
+                logout();
+                navigate('/login');
+              }}
               className="flex items-center gap-2 mx-auto"
             >
               <ArrowLeft className="h-4 w-4" />
