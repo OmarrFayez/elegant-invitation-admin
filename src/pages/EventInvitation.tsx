@@ -53,19 +53,28 @@ const EventInvitation: React.FC = () => {
 
   useEffect(() => {
     const fetchEvent = async () => {
-      if (!idOrSlug) return;
+      if (!idOrSlug) {
+        console.log('No idOrSlug provided');
+        return;
+      }
+
+      console.log('Fetching event with idOrSlug:', idOrSlug);
 
       try {
         let query = supabase.from('events').select('*');
         
         // Try to fetch by slug first, then by ID
         if (isNaN(Number(idOrSlug))) {
+          console.log('Searching by slug:', idOrSlug);
           query = query.eq('slug', idOrSlug);
         } else {
+          console.log('Searching by ID:', parseInt(idOrSlug));
           query = query.eq('id', parseInt(idOrSlug));
         }
         
         const { data, error } = await query.single();
+
+        console.log('Query result:', { data, error });
 
         if (error) throw error;
         setEvent(data);
