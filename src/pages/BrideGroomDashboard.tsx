@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, MapPin, Users, Heart, Eye, EyeOff, LogOut, ChevronDown, ChevronRight } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, Eye, EyeOff, LogOut, ChevronDown, ChevronRight, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
@@ -173,9 +173,17 @@ const BrideGroomDashboard: React.FC = () => {
           <CardContent className="pt-6">
             <Heart className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
             <h2 className="text-xl font-semibold mb-2">No Invitations Found</h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-6">
               You don't have any wedding invitations associated with your account.
             </p>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/login')}
+              className="flex items-center gap-2 mx-auto"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Login
+            </Button>
           </CardContent>
         </Card>
       </div>
