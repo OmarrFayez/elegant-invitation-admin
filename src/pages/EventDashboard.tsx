@@ -58,11 +58,45 @@ const EventDashboard: React.FC = () => {
 
       const user = JSON.parse(currentUser);
       
-      // Fetch events associated with this user
+      // Check if user has view permission for Events module (module_id: 10)
+      // First check user-specific permissions
+      const { data: userPermissions } = await supabase
+        .from('user_permissions')
+        .select('can_view')
+        .eq('user_id', user.user_id)
+        .eq('module_id', 10)
+        .single();
+
+      // If no user-specific permissions, check role permissions
+      let canView = false;
+      if (userPermissions?.can_view) {
+        canView = true;
+      } else if (user.role_id) {
+        const { data: rolePermissions } = await supabase
+          .from('role_permissions')
+          .select('can_view')
+          .eq('role_id', user.role_id)
+          .eq('module_id', 10)
+          .single();
+        
+        canView = rolePermissions?.can_view || false;
+      }
+
+      if (!canView) {
+        toast({
+          title: "Access Denied",
+          description: "You don't have permission to view events",
+          variant: "destructive",
+        });
+        setEvents([]);
+        setLoading(false);
+        return;
+      }
+      
+      // Fetch all events (user has view permission)
       const { data, error } = await supabase
         .from('events')
         .select('*')
-        .eq('user_id', user.user_id)
         .order('event_date', { ascending: true });
 
       if (error) throw error;
