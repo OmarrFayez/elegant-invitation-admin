@@ -93,6 +93,69 @@ export type Database = {
           },
         ]
       }
+      events: {
+        Row: {
+          background_color: string | null
+          background_image: string | null
+          background_music: string | null
+          date_added: string | null
+          description1: string | null
+          description2: string | null
+          email: string | null
+          event_date: string | null
+          event_name: string
+          id: number
+          location_text: string | null
+          location_url: string | null
+          max_attendance: number | null
+          phone_number: string | null
+          slug: string | null
+          updated_at: string | null
+          user_id: number | null
+          wish_account: string | null
+        }
+        Insert: {
+          background_color?: string | null
+          background_image?: string | null
+          background_music?: string | null
+          date_added?: string | null
+          description1?: string | null
+          description2?: string | null
+          email?: string | null
+          event_date?: string | null
+          event_name: string
+          id?: number
+          location_text?: string | null
+          location_url?: string | null
+          max_attendance?: number | null
+          phone_number?: string | null
+          slug?: string | null
+          updated_at?: string | null
+          user_id?: number | null
+          wish_account?: string | null
+        }
+        Update: {
+          background_color?: string | null
+          background_image?: string | null
+          background_music?: string | null
+          date_added?: string | null
+          description1?: string | null
+          description2?: string | null
+          email?: string | null
+          event_date?: string | null
+          event_name?: string
+          id?: number
+          location_text?: string | null
+          location_url?: string | null
+          max_attendance?: number | null
+          phone_number?: string | null
+          slug?: string | null
+          updated_at?: string | null
+          user_id?: number | null
+          wish_account?: string | null
+        }
+        Relationships: []
+      }
       modules: {
         Row: {
           created_at: string | null
