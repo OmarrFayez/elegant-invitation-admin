@@ -441,6 +441,14 @@ export type Database = {
         Args: { groom_name: string; bride_name: string }
         Returns: string
       }
+      get_current_user_id: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
