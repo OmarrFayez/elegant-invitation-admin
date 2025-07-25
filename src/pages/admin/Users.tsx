@@ -7,8 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { UserForm } from "@/components/admin/UserForm";
-import { usePagination } from "@/hooks/usePagination";
-import PaginationControls from "@/components/admin/PaginationControls";
+import { useTableData } from "@/hooks/useTableData";
+import SearchBar from "@/components/admin/SearchBar";
+import SortableHeader from "@/components/admin/SortableHeader";
+import EnhancedPaginationControls from "@/components/admin/EnhancedPaginationControls";
 
 interface User {
   user_id: number;
@@ -93,18 +95,28 @@ const Users = () => {
     fetchUsers();
   };
 
-  // Add pagination
+  // Add search, sort, and pagination
   const {
+    searchQuery,
+    setSearchQuery,
+    sortField,
+    sortDirection,
+    handleSort,
     currentPage,
     totalPages,
     totalItems,
+    filteredItems,
     paginatedData: paginatedUsers,
     setCurrentPage,
     canGoNext,
     canGoPrevious,
     startIndex,
     endIndex,
-  } = usePagination({ data: users, itemsPerPage: 10 });
+  } = useTableData({ 
+    data: users, 
+    itemsPerPage: 10,
+    searchableFields: ['name', 'email', 'phone', 'role_name']
+  });
 
   useEffect(() => {
     fetchUsers();
@@ -121,10 +133,17 @@ const Users = () => {
           <h1 className="text-3xl font-bold">Users</h1>
           <p className="text-muted-foreground">Manage system users and their roles</p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add User
-        </Button>
+        <div className="flex items-center space-x-4">
+          <SearchBar 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            placeholder="Search users..."
+          />
+          <Button onClick={() => setShowForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add User
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -136,17 +155,73 @@ const Users = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Created At</TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="user_id" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    ID
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="name" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Name
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="email" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Email
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="phone" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Phone
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="role_name" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Role
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="created_at" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Created At
+                  </SortableHeader>
+                </TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginatedUsers.map((user) => (
                 <TableRow key={user.user_id}>
+                  <TableCell className="font-medium">{user.user_id}</TableCell>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone || "N/A"}</TableCell>
@@ -181,7 +256,7 @@ const Users = () => {
             </TableBody>
           </Table>
           
-          <PaginationControls
+          <EnhancedPaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
@@ -190,6 +265,7 @@ const Users = () => {
             startIndex={startIndex}
             endIndex={endIndex}
             totalItems={totalItems}
+            filteredItems={filteredItems}
           />
         </CardContent>
       </Card>

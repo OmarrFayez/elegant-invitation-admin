@@ -9,8 +9,10 @@ import { supabase } from "@/integrations/supabase/client";
 import InvitationForm from "@/components/admin/InvitationForm";
 import AttendeesList from "@/components/admin/AttendeesList";
 import InvitationPreview from "@/components/admin/InvitationPreview";
-import { usePagination } from "@/hooks/usePagination";
-import PaginationControls from "@/components/admin/PaginationControls";
+import { useTableData } from "@/hooks/useTableData";
+import SearchBar from "@/components/admin/SearchBar";
+import SortableHeader from "@/components/admin/SortableHeader";
+import EnhancedPaginationControls from "@/components/admin/EnhancedPaginationControls";
 
 interface Wedding {
   id: number;
@@ -63,18 +65,28 @@ const Invitations = () => {
     }
   };
 
-  // Add pagination
+  // Add search, sort, and pagination
   const {
+    searchQuery,
+    setSearchQuery,
+    sortField,
+    sortDirection,
+    handleSort,
     currentPage,
     totalPages,
     totalItems,
+    filteredItems,
     paginatedData: paginatedWeddings,
     setCurrentPage,
     canGoNext,
     canGoPrevious,
     startIndex,
     endIndex,
-  } = usePagination({ data: weddings, itemsPerPage: 10 });
+  } = useTableData({ 
+    data: weddings, 
+    itemsPerPage: 10,
+    searchableFields: ['wedding_name', 'groom_name', 'bride_name', 'phone_number', 'email']
+  });
 
   useEffect(() => {
     fetchWeddings();
@@ -149,10 +161,17 @@ const Invitations = () => {
             Manage wedding invitations and track responses
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Invitation
-        </Button>
+        <div className="flex items-center space-x-4">
+          <SearchBar 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            placeholder="Search invitations..."
+          />
+          <Button onClick={() => setShowForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Invitation
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -175,18 +194,83 @@ const Invitations = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Wedding Name</TableHead>
-                  <TableHead>Couple</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Wedding Date</TableHead>
-                  <TableHead>Max Guests</TableHead>
-                  <TableHead>Date Added</TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="id" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      ID
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="wedding_name" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Wedding Name
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="groom_name" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Couple
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="phone_number" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Contact
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="wedding_date" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Wedding Date
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="max_attendance" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Max Guests
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="date_added" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Date Added
+                    </SortableHeader>
+                  </TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedWeddings.map((wedding) => (
                   <TableRow key={wedding.id}>
+                    <TableCell className="font-medium">{wedding.id}</TableCell>
                     <TableCell className="font-medium">
                       {wedding.wedding_name}
                     </TableCell>
@@ -260,7 +344,7 @@ const Invitations = () => {
             </Table>
           )}
           
-          <PaginationControls
+          <EnhancedPaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
@@ -269,6 +353,7 @@ const Invitations = () => {
             startIndex={startIndex}
             endIndex={endIndex}
             totalItems={totalItems}
+            filteredItems={filteredItems}
           />
         </CardContent>
       </Card>

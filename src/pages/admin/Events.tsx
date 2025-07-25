@@ -9,8 +9,10 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import EventForm from "@/components/admin/EventForm";
 import EventAttendeesList from "@/components/admin/EventAttendeesList";
-import { usePagination } from "@/hooks/usePagination";
-import PaginationControls from "@/components/admin/PaginationControls";
+import { useTableData } from "@/hooks/useTableData";
+import SearchBar from "@/components/admin/SearchBar";
+import SortableHeader from "@/components/admin/SortableHeader";
+import EnhancedPaginationControls from "@/components/admin/EnhancedPaginationControls";
 
 interface Event {
   id: number;
@@ -60,18 +62,28 @@ const Events = () => {
     }
   };
 
-  // Add pagination
+  // Add search, sort, and pagination
   const {
+    searchQuery,
+    setSearchQuery,
+    sortField,
+    sortDirection,
+    handleSort,
     currentPage,
     totalPages,
     totalItems,
+    filteredItems,
     paginatedData: paginatedEvents,
     setCurrentPage,
     canGoNext,
     canGoPrevious,
     startIndex,
     endIndex,
-  } = usePagination({ data: events, itemsPerPage: 10 });
+  } = useTableData({ 
+    data: events, 
+    itemsPerPage: 10,
+    searchableFields: ['event_name', 'phone_number', 'email']
+  });
 
   useEffect(() => {
     fetchEvents();
@@ -137,10 +149,17 @@ const Events = () => {
             Manage event invitations and track responses
           </p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New
-        </Button>
+        <div className="flex items-center space-x-4">
+          <SearchBar 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            placeholder="Search events..."
+          />
+          <Button onClick={() => setShowForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add New
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -163,17 +182,73 @@ const Events = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Event Name</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Event Date</TableHead>
-                  <TableHead>Max Guests</TableHead>
-                  <TableHead>Date Added</TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="id" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      ID
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="event_name" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Event Name
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="phone_number" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Contact
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="event_date" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Event Date
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="max_attendance" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Max Guests
+                    </SortableHeader>
+                  </TableHead>
+                  <TableHead>
+                    <SortableHeader 
+                      field="date_added" 
+                      currentSortField={sortField as string} 
+                      sortDirection={sortDirection} 
+                      onSort={handleSort}
+                    >
+                      Date Added
+                    </SortableHeader>
+                  </TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedEvents.map((event) => (
                   <TableRow key={event.id}>
+                    <TableCell className="font-medium">{event.id}</TableCell>
                     <TableCell className="font-medium">
                       {event.event_name}
                     </TableCell>
@@ -236,7 +311,7 @@ const Events = () => {
             </Table>
           )}
           
-          <PaginationControls
+          <EnhancedPaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
@@ -245,6 +320,7 @@ const Events = () => {
             startIndex={startIndex}
             endIndex={endIndex}
             totalItems={totalItems}
+            filteredItems={filteredItems}
           />
         </CardContent>
       </Card>

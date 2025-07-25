@@ -6,8 +6,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { RoleForm } from "@/components/admin/RoleForm";
-import { usePagination } from "@/hooks/usePagination";
-import PaginationControls from "@/components/admin/PaginationControls";
+import { useTableData } from "@/hooks/useTableData";
+import SearchBar from "@/components/admin/SearchBar";
+import SortableHeader from "@/components/admin/SortableHeader";
+import EnhancedPaginationControls from "@/components/admin/EnhancedPaginationControls";
 
 interface Role {
   role_id: number;
@@ -86,18 +88,28 @@ const Roles = () => {
     fetchRoles();
   };
 
-  // Add pagination
+  // Add search, sort, and pagination
   const {
+    searchQuery,
+    setSearchQuery,
+    sortField,
+    sortDirection,
+    handleSort,
     currentPage,
     totalPages,
     totalItems,
+    filteredItems,
     paginatedData: paginatedRoles,
     setCurrentPage,
     canGoNext,
     canGoPrevious,
     startIndex,
     endIndex,
-  } = usePagination({ data: roles, itemsPerPage: 10 });
+  } = useTableData({ 
+    data: roles, 
+    itemsPerPage: 10,
+    searchableFields: ['role_name']
+  });
 
   useEffect(() => {
     fetchRoles();
@@ -114,10 +126,17 @@ const Roles = () => {
           <h1 className="text-3xl font-bold">Roles & Permissions</h1>
           <p className="text-muted-foreground">Manage user roles and their permissions</p>
         </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Role
-        </Button>
+        <div className="flex items-center space-x-4">
+          <SearchBar 
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            placeholder="Search roles..."
+          />
+          <Button onClick={() => setShowForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Role
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -129,14 +148,43 @@ const Roles = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Role Name</TableHead>
-                <TableHead>Created At</TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="role_id" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    ID
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="role_name" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Role Name
+                  </SortableHeader>
+                </TableHead>
+                <TableHead>
+                  <SortableHeader 
+                    field="created_at" 
+                    currentSortField={sortField as string} 
+                    sortDirection={sortDirection} 
+                    onSort={handleSort}
+                  >
+                    Created At
+                  </SortableHeader>
+                </TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {paginatedRoles.map((role) => (
                 <TableRow key={role.role_id}>
+                  <TableCell className="font-medium">{role.role_id}</TableCell>
                   <TableCell className="font-medium">{role.role_name}</TableCell>
                   <TableCell>
                     {new Date(role.created_at).toLocaleDateString()}
@@ -164,7 +212,7 @@ const Roles = () => {
             </TableBody>
           </Table>
           
-          <PaginationControls
+          <EnhancedPaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
@@ -173,6 +221,7 @@ const Roles = () => {
             startIndex={startIndex}
             endIndex={endIndex}
             totalItems={totalItems}
+            filteredItems={filteredItems}
           />
         </CardContent>
       </Card>
