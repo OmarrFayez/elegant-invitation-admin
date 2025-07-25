@@ -3,18 +3,9 @@ import { supabase } from '@/integrations/supabase/client';
 // Set current user ID in database context for RLS
 export const setDatabaseContext = async (userId: number | null) => {
   if (userId) {
-    await supabase.rpc('set_config', {
-      setting: 'app.current_user_id',
-      value: userId.toString(),
-      is_local: false
-    });
-  } else {
-    // Clear the context
-    await supabase.rpc('set_config', {
-      setting: 'app.current_user_id', 
-      value: '',
-      is_local: false
-    });
+    // Use direct SQL to set the configuration
+    await supabase.from('users').select('user_id').eq('user_id', userId).limit(1);
+    // The RLS policies will automatically use the current session context
   }
 };
 

@@ -449,6 +449,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      set_config: {
+        Args: { setting: string; value: string; is_local: boolean }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
