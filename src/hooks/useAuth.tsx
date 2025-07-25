@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import { setDatabaseContext } from '@/lib/auth-middleware';
 
 interface User {
   user_id: number;
@@ -23,18 +24,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Check for stored user on mount
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+      // Set database context for RLS
+      setDatabaseContext(userData.user_id);
     }
   }, []);
 
-  const login = (userData: User) => {
+  const login = async (userData: User) => {
     setUser(userData);
     localStorage.setItem('currentUser', JSON.stringify(userData));
+    // Set database context for RLS
+    await setDatabaseContext(userData.user_id);
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     localStorage.removeItem('currentUser');
+    // Clear database context
+    await setDatabaseContext(null);
   };
 
   const isAuthenticated = !!user;
