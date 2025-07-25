@@ -26,17 +26,13 @@ const Login: React.FC = () => {
         if (user.role_id === 1) {
           navigate('/admin');
         } else {
-          // Get user's role name to determine redirect
-          const { data: roleData } = await supabase
-            .from('roles')
-            .select('role_name')
-            .eq('role_id', user.role_id)
-            .single();
-
-          if (roleData?.role_name === 'Event View') {
+          // Check user role ID for redirect
+          if (user.role_id === 3) { // Event View role
             navigate('/event-dashboard');
-          } else {
+          } else if (user.role_id === 2) { // Invitation role
             navigate('/dashboard');
+          } else {
+            navigate('/dashboard'); // Default redirect
           }
         }
       }
