@@ -6,6 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { RoleForm } from "@/components/admin/RoleForm";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/admin/PaginationControls";
 
 interface Role {
   role_id: number;
@@ -84,6 +86,19 @@ const Roles = () => {
     fetchRoles();
   };
 
+  // Add pagination
+  const {
+    currentPage,
+    totalPages,
+    totalItems,
+    paginatedData: paginatedRoles,
+    setCurrentPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+  } = usePagination({ data: roles, itemsPerPage: 10 });
+
   useEffect(() => {
     fetchRoles();
   }, []);
@@ -120,7 +135,7 @@ const Roles = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {roles.map((role) => (
+              {paginatedRoles.map((role) => (
                 <TableRow key={role.role_id}>
                   <TableCell className="font-medium">{role.role_name}</TableCell>
                   <TableCell>
@@ -148,6 +163,17 @@ const Roles = () => {
               ))}
             </TableBody>
           </Table>
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+          />
         </CardContent>
       </Card>
 

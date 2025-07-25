@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import EventForm from "@/components/admin/EventForm";
 import EventAttendeesList from "@/components/admin/EventAttendeesList";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/admin/PaginationControls";
 
 interface Event {
   id: number;
@@ -57,6 +59,19 @@ const Events = () => {
       setLoading(false);
     }
   };
+
+  // Add pagination
+  const {
+    currentPage,
+    totalPages,
+    totalItems,
+    paginatedData: paginatedEvents,
+    setCurrentPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+  } = usePagination({ data: events, itemsPerPage: 10 });
 
   useEffect(() => {
     fetchEvents();
@@ -157,7 +172,7 @@ const Events = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {events.map((event) => (
+                {paginatedEvents.map((event) => (
                   <TableRow key={event.id}>
                     <TableCell className="font-medium">
                       {event.event_name}
@@ -220,6 +235,17 @@ const Events = () => {
               </TableBody>
             </Table>
           )}
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+          />
         </CardContent>
       </Card>
     </div>

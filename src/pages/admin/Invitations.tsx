@@ -9,6 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import InvitationForm from "@/components/admin/InvitationForm";
 import AttendeesList from "@/components/admin/AttendeesList";
 import InvitationPreview from "@/components/admin/InvitationPreview";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/admin/PaginationControls";
 
 interface Wedding {
   id: number;
@@ -60,6 +62,19 @@ const Invitations = () => {
       setLoading(false);
     }
   };
+
+  // Add pagination
+  const {
+    currentPage,
+    totalPages,
+    totalItems,
+    paginatedData: paginatedWeddings,
+    setCurrentPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+  } = usePagination({ data: weddings, itemsPerPage: 10 });
 
   useEffect(() => {
     fetchWeddings();
@@ -170,7 +185,7 @@ const Invitations = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {weddings.map((wedding) => (
+                {paginatedWeddings.map((wedding) => (
                   <TableRow key={wedding.id}>
                     <TableCell className="font-medium">
                       {wedding.wedding_name}
@@ -244,6 +259,17 @@ const Invitations = () => {
               </TableBody>
             </Table>
           )}
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+          />
         </CardContent>
       </Card>
     </div>

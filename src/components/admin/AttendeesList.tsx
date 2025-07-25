@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/admin/PaginationControls";
 
 interface Attendee {
   id: number;
@@ -64,6 +66,19 @@ const AttendeesList = ({ weddingId, onBack }: AttendeesListProps) => {
   useEffect(() => {
     fetchData();
   }, [weddingId]);
+
+  // Add pagination
+  const {
+    currentPage,
+    totalPages,
+    totalItems,
+    paginatedData: paginatedAttendees,
+    setCurrentPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+  } = usePagination({ data: attendees, itemsPerPage: 10 });
 
   const attendingCount = attendees.filter(a => a.status === "Attending").length;
   const notAttendingCount = attendees.filter(a => a.status === "Not Attending").length;
@@ -139,7 +154,7 @@ const AttendeesList = ({ weddingId, onBack }: AttendeesListProps) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {attendees.map((attendee) => (
+                {paginatedAttendees.map((attendee) => (
                   <TableRow key={attendee.id}>
                     <TableCell className="font-medium">
                       {attendee.guest_name}
@@ -164,6 +179,17 @@ const AttendeesList = ({ weddingId, onBack }: AttendeesListProps) => {
               </TableBody>
             </Table>
           )}
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+          />
         </CardContent>
       </Card>
     </div>

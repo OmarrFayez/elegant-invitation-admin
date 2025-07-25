@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { usePagination } from "@/hooks/usePagination";
+import PaginationControls from "@/components/admin/PaginationControls";
 
 interface EventAttendance {
   id: number;
@@ -66,6 +68,19 @@ const EventAttendeesList = ({ eventId, onBack }: EventAttendeesListProps) => {
   useEffect(() => {
     fetchData();
   }, [eventId]);
+
+  // Add pagination
+  const {
+    currentPage,
+    totalPages,
+    totalItems,
+    paginatedData: paginatedAttendances,
+    setCurrentPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+  } = usePagination({ data: attendances, itemsPerPage: 10 });
 
   const exportToCSV = () => {
     const csvContent = [
@@ -189,7 +204,7 @@ const EventAttendeesList = ({ eventId, onBack }: EventAttendeesListProps) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {attendances.map((attendance) => (
+                {paginatedAttendances.map((attendance) => (
                   <TableRow key={attendance.id}>
                     <TableCell className="font-medium">
                       {attendance.guest_name || "Anonymous"}
@@ -208,6 +223,17 @@ const EventAttendeesList = ({ eventId, onBack }: EventAttendeesListProps) => {
               </TableBody>
             </Table>
           )}
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+          />
         </CardContent>
       </Card>
     </div>
