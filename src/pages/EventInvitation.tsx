@@ -269,15 +269,6 @@ const EventInvitation = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden font-sans" style={backgroundStyle}>
-      {/* Back Button */}
-      <Button
-        variant="ghost"
-        className="absolute top-4 left-4 z-50 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white"
-        onClick={() => navigate(-1)}
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back
-      </Button>
 
       {/* Music Toggle */}
       {event.background_music && (
