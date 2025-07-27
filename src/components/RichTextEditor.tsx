@@ -18,7 +18,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': ['serif', 'monospace'] }],
+      [{ 'font': ['sans-serif', 'serif', 'monospace'] }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
@@ -61,6 +61,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       .ql-editor {
         min-height: 180px;
       }
+      .ql-font-sans-serif { font-family: 'Arial', sans-serif; }
       .ql-font-serif { font-family: 'Georgia', serif; }
       .ql-font-monospace { font-family: 'Monaco', monospace; }
     `;
