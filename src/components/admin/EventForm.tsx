@@ -117,6 +117,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
         max_attendance: formData.max_attendance
           ? parseInt(formData.max_attendance as string)
           : null,
+        attendance_deadline: formData.attendance_deadline || null,
         background_image: backgroundImagePath,
         background_music: backgroundMusicPath,
         user_id: selectedUserId,
