@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -15,8 +15,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   placeholder = "Enter description...",
   isArabic = false
 }) => {
-  const quillRef = useRef<ReactQuill>(null);
-
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -44,58 +42,80 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     'code-block'
   ];
 
-  useEffect(() => {
-    // Add custom styles for Quill editor
-    const style = document.createElement('style');
-    style.textContent = `
-      .ql-toolbar {
-        border-top: 1px solid #ccc;
-        border-left: 1px solid #ccc;
-        border-right: 1px solid #ccc;
-        border-radius: 8px 8px 0 0;
-        ${isArabic ? 'direction: rtl;' : ''}
-      }
-      .ql-container {
-        border-bottom: 1px solid #ccc;
-        border-left: 1px solid #ccc;
-        border-right: 1px solid #ccc;
-        border-radius: 0 0 8px 8px;
-        min-height: 200px;
-        ${isArabic ? 'direction: rtl;' : ''}
-      }
-      .ql-editor {
-        min-height: 180px;
-        ${isArabic ? 'direction: rtl; text-align: right;' : ''}
-      }
-      ${isArabic ? `
-      .ql-toolbar .ql-formats {
-        float: right !important;
-      }
-      .ql-toolbar .ql-formats:first-child {
-        margin-right: 0;
-        margin-left: 12px;
-      }
-      .ql-picker-options {
-        direction: rtl;
-      }
-      ` : ''}
-      .ql-font-sans-serif { font-family: 'Arial', sans-serif; }
-      .ql-font-serif { font-family: 'Georgia', serif; }
-      .ql-font-monospace { font-family: 'Monaco', monospace; }
-      .ql-font-arabic-naskh { font-family: 'Amiri', 'Traditional Arabic', serif; }
-      .ql-font-arabic-kufi { font-family: 'Aref Ruqaa', 'Arabic Typesetting', serif; }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, [isArabic]);
-
   return (
-    <div className={`rich-text-editor ${isArabic ? 'rtl' : ''}`}>
+    <div className={`rich-text-editor ${isArabic ? 'rtl-editor' : 'ltr-editor'}`}>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          .rich-text-editor .ql-toolbar {
+            border-top: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            border-radius: 8px 8px 0 0;
+          }
+          .rich-text-editor .ql-container {
+            border-bottom: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            border-radius: 0 0 8px 8px;
+            min-height: 200px;
+          }
+          .rich-text-editor .ql-editor {
+            min-height: 180px;
+          }
+          
+          /* RTL specific styles */
+          .rtl-editor .ql-toolbar {
+            direction: rtl;
+          }
+          .rtl-editor .ql-container {
+            direction: rtl;
+          }
+          .rtl-editor .ql-editor {
+            direction: rtl;
+            text-align: right;
+          }
+          .rtl-editor .ql-toolbar .ql-formats {
+            margin-right: 0;
+            margin-left: 12px;
+            float: right;
+          }
+          .rtl-editor .ql-picker-options {
+            direction: rtl;
+          }
+          .rtl-editor .ql-toolbar .ql-picker {
+            float: right;
+          }
+          .rtl-editor .ql-toolbar .ql-formats:first-child {
+            margin-right: 0;
+            margin-left: 12px;
+          }
+          
+          /* LTR specific styles */
+          .ltr-editor .ql-toolbar {
+            direction: ltr;
+          }
+          .ltr-editor .ql-container {
+            direction: ltr;
+          }
+          .ltr-editor .ql-editor {
+            direction: ltr;
+            text-align: left;
+          }
+          .ltr-editor .ql-toolbar .ql-formats {
+            margin-left: 0;
+            margin-right: 12px;
+            float: left;
+          }
+          
+          /* Font families */
+          .ql-font-sans-serif { font-family: 'Arial', sans-serif; }
+          .ql-font-serif { font-family: 'Georgia', serif; }
+          .ql-font-monospace { font-family: 'Monaco', monospace; }
+          .ql-font-arabic-naskh { font-family: 'Amiri', 'Traditional Arabic', serif; }
+          .ql-font-arabic-kufi { font-family: 'Aref Ruqaa', 'Arabic Typesetting', serif; }
+        `
+      }} />
       <ReactQuill
-        ref={quillRef}
         theme="snow"
         value={value}
         onChange={onChange}
@@ -104,9 +124,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         placeholder={placeholder}
         style={{ 
           backgroundColor: 'white',
-          minHeight: '200px',
-          direction: isArabic ? 'rtl' : 'ltr',
-          textAlign: isArabic ? 'right' : 'left'
+          minHeight: '200px'
         }}
       />
     </div>
