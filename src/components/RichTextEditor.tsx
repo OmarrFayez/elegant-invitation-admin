@@ -18,7 +18,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': ['serif', 'monospace', 'arial', 'georgia', 'times', 'verdana', 'helvetica', 'playfair', 'dancing-script', 'roboto', 'open-sans', 'lato'] }],
+      [{ 'font': ['serif', 'monospace'] }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
@@ -63,16 +63,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
       .ql-font-serif { font-family: 'Georgia', serif; }
       .ql-font-monospace { font-family: 'Monaco', monospace; }
-      .ql-font-arial { font-family: 'Arial', sans-serif; }
-      .ql-font-georgia { font-family: 'Georgia', serif; }
-      .ql-font-times { font-family: 'Times New Roman', serif; }
-      .ql-font-verdana { font-family: 'Verdana', sans-serif; }
-      .ql-font-helvetica { font-family: 'Helvetica', sans-serif; }
-      .ql-font-playfair { font-family: 'Playfair Display', serif; }
-      .ql-font-dancing-script { font-family: 'Dancing Script', cursive; }
-      .ql-font-roboto { font-family: 'Roboto', sans-serif; }
-      .ql-font-open-sans { font-family: 'Open Sans', sans-serif; }
-      .ql-font-lato { font-family: 'Lato', sans-serif; }
     `;
     document.head.appendChild(style);
     
