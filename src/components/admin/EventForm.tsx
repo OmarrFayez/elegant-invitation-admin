@@ -166,14 +166,13 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
 
   return (
     <div className="space-y-6">
-      
-          <h1 className="text-3xl font-bold tracking-tight">
-            {event ? "Edit" : "Create"} Event Invitation
-          </h1>
-          <p className="text-muted-foreground">
-            {event ? "Update" : "Add"} event invitation details
-          </p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
+          {event ? "Edit" : "Create"} Event Invitation
+        </h1>
+        <p className="text-muted-foreground">
+          {event ? "Update" : "Add"} event invitation details
+        </p>
       </div>
 
       <Card>
