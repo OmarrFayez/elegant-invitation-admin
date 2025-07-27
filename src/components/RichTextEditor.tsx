@@ -43,7 +43,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   ];
 
   return (
-    <div className={`rich-text-editor ${isArabic ? 'rtl-editor' : 'ltr-editor'}`}>
+    <div className={`rich-text-editor`}>
       <style dangerouslySetInnerHTML={{
         __html: `
           .rich-text-editor .ql-toolbar {
@@ -51,6 +51,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             border-left: 1px solid #ccc;
             border-right: 1px solid #ccc;
             border-radius: 8px 8px 0 0;
+            direction: ltr !important;
           }
           .rich-text-editor .ql-container {
             border-bottom: 1px solid #ccc;
@@ -61,50 +62,20 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           }
           .rich-text-editor .ql-editor {
             min-height: 180px;
+            ${isArabic ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;'}
           }
           
-          /* RTL specific styles */
-          .rtl-editor .ql-toolbar {
-            direction: rtl;
-          }
-          .rtl-editor .ql-container {
-            direction: rtl;
-          }
-          .rtl-editor .ql-editor {
-            direction: rtl;
-            text-align: right;
-          }
-          .rtl-editor .ql-toolbar .ql-formats {
-            margin-right: 0;
-            margin-left: 12px;
-            float: right;
-          }
-          .rtl-editor .ql-picker-options {
-            direction: rtl;
-          }
-          .rtl-editor .ql-toolbar .ql-picker {
-            float: right;
-          }
-          .rtl-editor .ql-toolbar .ql-formats:first-child {
-            margin-right: 0;
-            margin-left: 12px;
-          }
-          
-          /* LTR specific styles */
-          .ltr-editor .ql-toolbar {
-            direction: ltr;
-          }
-          .ltr-editor .ql-container {
-            direction: ltr;
-          }
-          .ltr-editor .ql-editor {
-            direction: ltr;
-            text-align: left;
-          }
-          .ltr-editor .ql-toolbar .ql-formats {
+          /* Keep toolbar always LTR */
+          .rich-text-editor .ql-toolbar .ql-formats {
             margin-left: 0;
             margin-right: 12px;
             float: left;
+          }
+          .rich-text-editor .ql-toolbar .ql-picker {
+            float: none;
+          }
+          .rich-text-editor .ql-picker-options {
+            direction: ltr;
           }
           
           /* Font families */
