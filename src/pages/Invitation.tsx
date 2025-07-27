@@ -151,7 +151,8 @@ const Invitation: React.FC = () => {
 
   const formatDate = (dateString?: string, language?: string) => {
     if (!dateString) return '';
-    const locale = language === 'ar' ? 'ar-SA' : 'en-US';
+    // Use Gregorian calendar for Arabic by specifying the calendar explicitly
+    const locale = language === 'ar' ? 'ar-SA-u-ca-gregory' : 'en-US';
     return new Date(dateString).toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',

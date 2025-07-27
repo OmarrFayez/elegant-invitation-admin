@@ -319,7 +319,7 @@ const EventInvitation = () => {
             {event.event_name}
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-8 font-light">
-            {new Date(event.event_date).toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', {
+            {new Date(event.event_date).toLocaleDateString(isArabic ? 'ar-SA-u-ca-gregory' : 'en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',

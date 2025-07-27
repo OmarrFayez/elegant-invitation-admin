@@ -193,7 +193,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
           {translations.confirmPresence}
         </CardTitle>
         <p className="text-muted-foreground">
-          {translations.before} {new Date().toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {translations.before} {new Date().toLocaleDateString(isArabic ? 'ar-SA-u-ca-gregory' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
       </CardHeader>
       <CardContent>

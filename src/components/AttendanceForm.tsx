@@ -194,7 +194,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId, language, at
           {translations.confirmPresence}
         </CardTitle>
         <p className="text-muted-foreground">
-          {translations.before} {attendanceDeadline ? new Date(attendanceDeadline).toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : new Date().toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {translations.before} {attendanceDeadline ? new Date(attendanceDeadline).toLocaleDateString(isArabic ? 'ar-SA-u-ca-gregory' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : new Date().toLocaleDateString(isArabic ? 'ar-SA-u-ca-gregory' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
       </CardHeader>
       <CardContent>
