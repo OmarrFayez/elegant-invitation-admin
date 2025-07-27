@@ -23,6 +23,7 @@ interface Event {
   background_image: string;
   background_music: string;
   background_color?: string;
+  subtitle?: string;
   slug?: string;
   user_id?: number;
 }
@@ -45,6 +46,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
     location_text: event?.location_text || "",
     location_url: event?.location_url || "",
     background_color: event?.background_color || "#f3f4f6",
+    subtitle: event?.subtitle || "",
   });
 
   const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
@@ -208,6 +210,18 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   onChange={handleInputChange}
                 />
               </div>
+            </div>
+
+            {/* Subtitle */}
+            <div className="space-y-2">
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Input
+                id="subtitle"
+                name="subtitle"
+                value={formData.subtitle}
+                onChange={handleInputChange}
+                placeholder="Event subtitle (appears under countdown timer)"
+              />
             </div>
 
             {/* Contact Info */}

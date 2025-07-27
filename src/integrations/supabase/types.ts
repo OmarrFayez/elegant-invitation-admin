@@ -137,6 +137,7 @@ export type Database = {
           max_attendance: number | null
           phone_number: string | null
           slug: string | null
+          subtitle: string | null
           updated_at: string | null
           user_id: number | null
           wish_account: string | null
@@ -157,6 +158,7 @@ export type Database = {
           max_attendance?: number | null
           phone_number?: string | null
           slug?: string | null
+          subtitle?: string | null
           updated_at?: string | null
           user_id?: number | null
           wish_account?: string | null
@@ -177,6 +179,7 @@ export type Database = {
           max_attendance?: number | null
           phone_number?: string | null
           slug?: string | null
+          subtitle?: string | null
           updated_at?: string | null
           user_id?: number | null
           wish_account?: string | null

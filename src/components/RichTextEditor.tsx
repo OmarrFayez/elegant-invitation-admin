@@ -18,7 +18,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': [] }],
+      [{ 'font': ['serif', 'monospace', 'Dancing Script', 'Playfair Display', 'Arial', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Impact', 'Comic Sans MS'] }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
@@ -61,6 +61,17 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       .ql-editor {
         min-height: 180px;
       }
+      .ql-font-serif { font-family: 'Georgia', serif; }
+      .ql-font-monospace { font-family: 'Monaco', monospace; }
+      .ql-font-dancing-script { font-family: 'Dancing Script', cursive; }
+      .ql-font-playfair-display { font-family: 'Playfair Display', serif; }
+      .ql-font-arial { font-family: 'Arial', sans-serif; }
+      .ql-font-georgia { font-family: 'Georgia', serif; }
+      .ql-font-times-new-roman { font-family: 'Times New Roman', serif; }
+      .ql-font-verdana { font-family: 'Verdana', sans-serif; }
+      .ql-font-trebuchet-ms { font-family: 'Trebuchet MS', sans-serif; }
+      .ql-font-impact { font-family: 'Impact', sans-serif; }
+      .ql-font-comic-sans-ms { font-family: 'Comic Sans MS', cursive; }
     `;
     document.head.appendChild(style);
     

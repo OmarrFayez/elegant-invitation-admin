@@ -20,6 +20,7 @@ interface Event {
   background_image: string;
   background_music: string;
   background_color?: string;
+  subtitle?: string;
   slug?: string;
 }
 
@@ -259,6 +260,13 @@ const EventInvitation = () => {
               </div>
             ))}
           </div>
+
+          {/* Subtitle */}
+          {event.subtitle && (
+            <p className="text-xl md:text-2xl text-white/90 mb-8 font-light text-center">
+              {event.subtitle}
+            </p>
+          )}
         </div>
 
         {/* Event Details Card */}
@@ -310,7 +318,8 @@ const EventInvitation = () => {
 
               {/* Add to Calendar */}
               <Button
-                className="w-full bg-white text-gray-800 hover:bg-white/90 font-semibold"
+                variant="ghost"
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30"
                 onClick={addToCalendar}
               >
                 <Calendar className="h-5 w-5 mr-3" />
