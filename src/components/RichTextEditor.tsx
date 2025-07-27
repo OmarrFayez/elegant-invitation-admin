@@ -18,7 +18,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': ['serif', 'monospace', 'Dancing Script', 'Playfair Display', 'Arial', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Impact', 'Comic Sans MS'] }],
+      [{ 'font': ['serif', 'monospace', 'Dancing Script', 'Playfair Display', 'Arial', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Impact', 'Comic Sans MS', 'Helvetica', 'Calibri', 'Tahoma', 'Lucida Grande', 'Open Sans', 'Roboto', 'Lato', 'Montserrat', 'Poppins', 'Nunito', 'Source Sans Pro', 'Ubuntu', 'Raleway', 'Merriweather', 'Oswald', 'PT Sans', 'Crimson Text', 'EB Garamond', 'Libre Baskerville'] }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
@@ -72,6 +72,25 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       .ql-font-trebuchet-ms { font-family: 'Trebuchet MS', sans-serif; }
       .ql-font-impact { font-family: 'Impact', sans-serif; }
       .ql-font-comic-sans-ms { font-family: 'Comic Sans MS', cursive; }
+      .ql-font-helvetica { font-family: 'Helvetica', sans-serif; }
+      .ql-font-calibri { font-family: 'Calibri', sans-serif; }
+      .ql-font-tahoma { font-family: 'Tahoma', sans-serif; }
+      .ql-font-lucida-grande { font-family: 'Lucida Grande', sans-serif; }
+      .ql-font-open-sans { font-family: 'Open Sans', sans-serif; }
+      .ql-font-roboto { font-family: 'Roboto', sans-serif; }
+      .ql-font-lato { font-family: 'Lato', sans-serif; }
+      .ql-font-montserrat { font-family: 'Montserrat', sans-serif; }
+      .ql-font-poppins { font-family: 'Poppins', sans-serif; }
+      .ql-font-nunito { font-family: 'Nunito', sans-serif; }
+      .ql-font-source-sans-pro { font-family: 'Source Sans Pro', sans-serif; }
+      .ql-font-ubuntu { font-family: 'Ubuntu', sans-serif; }
+      .ql-font-raleway { font-family: 'Raleway', sans-serif; }
+      .ql-font-merriweather { font-family: 'Merriweather', serif; }
+      .ql-font-oswald { font-family: 'Oswald', sans-serif; }
+      .ql-font-pt-sans { font-family: 'PT Sans', sans-serif; }
+      .ql-font-crimson-text { font-family: 'Crimson Text', serif; }
+      .ql-font-eb-garamond { font-family: 'EB Garamond', serif; }
+      .ql-font-libre-baskerville { font-family: 'Libre Baskerville', serif; }
     `;
     document.head.appendChild(style);
     

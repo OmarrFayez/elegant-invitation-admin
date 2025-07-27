@@ -201,9 +201,14 @@ const EventInvitation = () => {
       
       // Use event background image if available, otherwise use default
       if (event.background_image) {
-        updateMetaTag('og:image', event.background_image);
+        // Ensure the image URL is absolute for social media sharing
+        const absoluteImageUrl = event.background_image.startsWith('http') 
+          ? event.background_image 
+          : `${window.location.origin}${event.background_image}`;
+        updateMetaTag('og:image', absoluteImageUrl);
         updateMetaTag('og:image:width', '1200');
         updateMetaTag('og:image:height', '630');
+        updateMetaTag('og:image:alt', `${event.event_name} invitation`);
       }
       
       updateMetaTag('og:url', window.location.href);
@@ -214,7 +219,12 @@ const EventInvitation = () => {
       updateMetaTagName('twitter:description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
       
       if (event.background_image) {
-        updateMetaTagName('twitter:image', event.background_image);
+        // Ensure the image URL is absolute for social media sharing
+        const absoluteImageUrl = event.background_image.startsWith('http') 
+          ? event.background_image 
+          : `${window.location.origin}${event.background_image}`;
+        updateMetaTagName('twitter:image', absoluteImageUrl);
+        updateMetaTagName('twitter:image:alt', `${event.event_name} invitation`);
       }
 
       // Update meta description
