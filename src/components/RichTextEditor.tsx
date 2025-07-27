@@ -53,6 +53,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         border-left: 1px solid #ccc;
         border-right: 1px solid #ccc;
         border-radius: 8px 8px 0 0;
+        ${isArabic ? 'direction: rtl;' : ''}
       }
       .ql-container {
         border-bottom: 1px solid #ccc;
@@ -60,10 +61,24 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         border-right: 1px solid #ccc;
         border-radius: 0 0 8px 8px;
         min-height: 200px;
+        ${isArabic ? 'direction: rtl;' : ''}
       }
       .ql-editor {
         min-height: 180px;
+        ${isArabic ? 'direction: rtl; text-align: right;' : ''}
       }
+      ${isArabic ? `
+      .ql-toolbar .ql-formats {
+        float: right !important;
+      }
+      .ql-toolbar .ql-formats:first-child {
+        margin-right: 0;
+        margin-left: 12px;
+      }
+      .ql-picker-options {
+        direction: rtl;
+      }
+      ` : ''}
       .ql-font-sans-serif { font-family: 'Arial', sans-serif; }
       .ql-font-serif { font-family: 'Georgia', serif; }
       .ql-font-monospace { font-family: 'Monaco', monospace; }
@@ -75,10 +90,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     return () => {
       document.head.removeChild(style);
     };
-  }, []);
+  }, [isArabic]);
 
   return (
-    <div className="rich-text-editor">
+    <div className={`rich-text-editor ${isArabic ? 'rtl' : ''}`}>
       <ReactQuill
         ref={quillRef}
         theme="snow"
