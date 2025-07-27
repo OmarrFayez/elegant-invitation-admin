@@ -9,9 +9,10 @@ import { supabase } from '@/integrations/supabase/client';
 
 interface AttendanceFormProps {
   weddingId: number;
+  language?: string;
 }
 
-const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
+const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId, language }) => {
   const [status, setStatus] = useState<'Attending' | 'Not Attending' | ''>('');
   const [numberOfGuests, setNumberOfGuests] = useState<number>(1);
   const [guestNames, setGuestNames] = useState<string[]>(['']);
@@ -47,8 +48,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
     
     if (!status) {
       toast({
-        title: "Error",
-        description: "Please select your attendance status",
+        title: translations.error,
+        description: translations.selectAttendanceStatus,
         variant: "destructive",
       });
       return;
@@ -56,8 +57,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
 
     if (!phoneNumber.trim()) {
       toast({
-        title: "Error",
-        description: "Please enter your phone number",
+        title: translations.error,
+        description: translations.enterYourPhoneNumber,
         variant: "destructive",
       });
       return;
@@ -65,8 +66,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
 
     if ((status === 'Attending' || status === 'Not Attending') && guestNames.some(name => !name.trim())) {
       toast({
-        title: "Error", 
-        description: "Please fill in all guest names",
+        title: translations.error, 
+        description: translations.fillAllGuestNames,
         variant: "destructive",
       });
       return;
@@ -87,8 +88,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
 
       if (existingAttendance && existingAttendance.length > 0) {
         toast({
-          title: "Already Submitted",
-          description: "You have already filled the form with this phone number.",
+          title: translations.alreadySubmitted,
+          description: translations.alreadyFilledForm,
           variant: "destructive",
         });
         setLoading(false);
@@ -110,8 +111,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
       if (error) throw error;
 
       toast({
-        title: "Success!",
-        description: `Your attendance has been confirmed. Thank you!`,
+        title: translations.success,
+        description: translations.attendanceConfirmed,
       });
 
       // Reset form
@@ -122,8 +123,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
     } catch (error) {
       console.error('Error submitting attendance:', error);
       toast({
-        title: "Error",
-        description: "Failed to submit attendance. Please try again.",
+        title: translations.error,
+        description: translations.failedToSubmit,
         variant: "destructive",
       });
     } finally {
@@ -131,14 +132,68 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
     }
   };
 
+  const getTranslations = (lang?: string) => {
+    if (lang === 'ar') {
+      return {
+        confirmPresence: "الرجاء تأكيد حضورك",
+        before: "قبل",
+        attending: "حاضر",
+        notAttending: "غير حاضر", 
+        phoneNumber: "رقم الهاتف",
+        enterPhoneNumber: "أدخل رقم الهاتف (أرقام فقط)",
+        numberOfGuestsAttending: "عدد الضيوف الحاضرين",
+        numberOfGuestsNotAttending: "عدد الضيوف غير الحاضرين",
+        guest: "ضيف رقم",
+        enterGuestName: "أدخل اسم الضيف",
+        pressToConfirm: "اضغط للتأكيد",
+        submitting: "جاري الإرسال...",
+        error: "خطأ",
+        selectAttendanceStatus: "الرجاء اختيار حالة الحضور",
+        enterYourPhoneNumber: "الرجاء إدخال رقم هاتفك",
+        fillAllGuestNames: "الرجاء ملء جميع أسماء الضيوف",
+        alreadySubmitted: "تم الإرسال مسبقاً",
+        alreadyFilledForm: "لقد قمت بملء النموذج بهذا الرقم من قبل.",
+        success: "نجح!",
+        attendanceConfirmed: "تم تأكيد حضورك. شكراً لك!",
+        failedToSubmit: "فشل في إرسال الحضور. الرجاء المحاولة مرة أخرى."
+      };
+    }
+    return {
+      confirmPresence: "Kindly confirm your presence",
+      before: "Before",
+      attending: "Attending",
+      notAttending: "Not Attending",
+      phoneNumber: "Phone Number", 
+      enterPhoneNumber: "Enter phone number (numbers only)",
+      numberOfGuestsAttending: "Number of Guests Attending",
+      numberOfGuestsNotAttending: "Number of Guests Not Attending",
+      guest: "Guest #",
+      enterGuestName: "Enter guest name",
+      pressToConfirm: "Press To Confirm",
+      submitting: "Submitting...",
+      error: "Error",
+      selectAttendanceStatus: "Please select your attendance status",
+      enterYourPhoneNumber: "Please enter your phone number", 
+      fillAllGuestNames: "Please fill in all guest names",
+      alreadySubmitted: "Already Submitted",
+      alreadyFilledForm: "You have already filled the form with this phone number.",
+      success: "Success!",
+      attendanceConfirmed: "Your attendance has been confirmed. Thank you!",
+      failedToSubmit: "Failed to submit attendance. Please try again."
+    };
+  };
+
+  const isArabic = language === 'ar';
+  const translations = getTranslations(language);
+
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card className={`max-w-2xl mx-auto ${isArabic ? 'rtl' : ''}`} style={{ fontFamily: isArabic ? 'Amiri, serif' : 'inherit' }}>
       <CardHeader className="text-center">
         <CardTitle className="text-2xl text-primary">
-          Kindly confirm your presence
+          {translations.confirmPresence}
         </CardTitle>
         <p className="text-muted-foreground">
-          Before {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {translations.before} {new Date().toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
       </CardHeader>
       <CardContent>
@@ -155,7 +210,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
               }`}
               onClick={() => setStatus('Attending')}
             >
-              Attending
+              {translations.attending}
             </Button>
             <Button
               type="button"
@@ -167,7 +222,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
               }`}
               onClick={() => setStatus('Not Attending')}
             >
-              Not Attending
+              {translations.notAttending}
             </Button>
           </div>
 
@@ -176,13 +231,13 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
             <>
               <div className="space-y-2">
                 <Label htmlFor="phoneNumber" className="text-primary font-semibold">
-                  Phone Number
+                  {translations.phoneNumber}
                 </Label>
                 <Input
                   id="phoneNumber"
                   value={phoneNumber}
                   onChange={(e) => handlePhoneNumberChange(e.target.value)}
-                  placeholder="Enter phone number (numbers only)"
+                  placeholder={translations.enterPhoneNumber}
                   className="h-12"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -194,7 +249,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
               {/* Number of Guests */}
               <div className="space-y-2">
                 <Label htmlFor="numberOfGuests" className="text-primary font-semibold">
-                  {status === 'Attending' ? 'Number of Guests Attending' : 'Number of Guests Not Attending'}
+                  {status === 'Attending' ? translations.numberOfGuestsAttending : translations.numberOfGuestsNotAttending}
                 </Label>
                 <Select value={numberOfGuests.toString()} onValueChange={handleNumberOfGuestsChange}>
                   <SelectTrigger className="h-12">
@@ -215,13 +270,13 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
                 {guestNames.slice(0, numberOfGuests).map((name, index) => (
                   <div key={index} className="space-y-2">
                     <Label htmlFor={`guest-${index}`} className="text-primary font-semibold">
-                      Guest #{index + 1}
+                      {translations.guest}{index + 1}
                     </Label>
                     <Input
                       id={`guest-${index}`}
                       value={name}
                       onChange={(e) => handleGuestNameChange(index, e.target.value)}
-                      placeholder="Enter guest name"
+                      placeholder={translations.enterGuestName}
                       className="h-12"
                       required
                     />
@@ -237,7 +292,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId }) => {
             disabled={!status || loading}
             className="w-full h-12 bg-primary hover:bg-primary/90"
           >
-            {loading ? 'Submitting...' : 'Press To Confirm'}
+            {loading ? translations.submitting : translations.pressToConfirm}
           </Button>
         </form>
       </CardContent>

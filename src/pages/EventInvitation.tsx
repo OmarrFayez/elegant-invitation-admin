@@ -21,6 +21,7 @@ interface Event {
   background_music: string;
   background_color?: string;
   subtitle?: string;
+  language?: string;
   slug?: string;
 }
 
@@ -33,6 +34,33 @@ const EventInvitation = () => {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+
+  const getTranslations = (language?: string) => {
+    if (language === 'ar') {
+      return {
+        eventNotFound: "الحدث غير موجود",
+        errorLoadingEvent: "خطأ في تحميل الحدث",
+        goHome: "الذهاب للرئيسية",
+        days: "أيام",
+        hours: "ساعات",
+        minutes: "دقائق", 
+        seconds: "ثواني",
+        viewInGoogleMaps: "عرض في خرائط جوجل",
+        addToCalendar: "أضف للتقويم"
+      };
+    }
+    return {
+      eventNotFound: "Event not found",
+      errorLoadingEvent: "Error loading event",
+      goHome: "Go Home",
+      days: "Days",
+      hours: "Hours", 
+      minutes: "Minutes",
+      seconds: "Seconds",
+      viewInGoogleMaps: "View in Google Maps",
+      addToCalendar: "Add to Calendar"
+    };
+  };
 
   const fetchEvent = async () => {
     try {
@@ -54,7 +82,7 @@ const EventInvitation = () => {
       if (error) throw error;
       if (!data) {
         toast({
-          title: "Event not found",
+          title: getTranslations(undefined).eventNotFound,
           variant: "destructive",
         });
         navigate("/");
@@ -64,7 +92,7 @@ const EventInvitation = () => {
       setEvent(data);
     } catch (error: any) {
       toast({
-        title: "Error loading event",
+        title: getTranslations(undefined).errorLoadingEvent,
         description: error.message,
         variant: "destructive",
       });
@@ -232,6 +260,9 @@ const EventInvitation = () => {
     }
   }, [event]);
 
+  const isArabic = event?.language === 'ar';
+  const translations = getTranslations(event?.language);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
@@ -244,10 +275,10 @@ const EventInvitation = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
         <Card className="p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Event Not Found</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">{translations.eventNotFound}</h2>
           <Button onClick={() => navigate("/")} className="mt-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Go Home
+            {translations.goHome}
           </Button>
         </Card>
       </div>
@@ -268,7 +299,7 @@ const EventInvitation = () => {
       };
 
   return (
-    <div className="min-h-screen relative overflow-hidden font-sans" style={backgroundStyle}>
+    <div className={`min-h-screen relative overflow-hidden font-sans ${isArabic ? 'rtl' : ''}`} style={{ ...backgroundStyle, fontFamily: isArabic ? 'Amiri, serif' : 'inherit' }}>
 
       {/* Music Toggle */}
       {event.background_music && (
@@ -288,7 +319,7 @@ const EventInvitation = () => {
             {event.event_name}
           </h1>
           <p className="text-xl md:text-2xl text-white/90 mb-8 font-light">
-            {new Date(event.event_date).toLocaleDateString('en-US', {
+            {new Date(event.event_date).toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
@@ -297,12 +328,12 @@ const EventInvitation = () => {
           </p>
 
           {/* Countdown Timer */}
-          <div className="flex justify-center space-x-4 md:space-x-8 mb-12">
+          <div className={`flex justify-center space-x-4 md:space-x-8 mb-12 ${isArabic ? 'flex-row-reverse space-x-reverse' : ''}`}>
             {[
-              { label: 'Days', value: countdown.days },
-              { label: 'Hours', value: countdown.hours },
-              { label: 'Minutes', value: countdown.minutes },
-              { label: 'Seconds', value: countdown.seconds }
+              { label: translations.days, value: countdown.days },
+              { label: translations.hours, value: countdown.hours },
+              { label: translations.minutes, value: countdown.minutes },
+              { label: translations.seconds, value: countdown.seconds }
             ].map((item, index) => (
               <div key={index} className="text-center">
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 md:p-4 border border-white/30">
@@ -366,7 +397,7 @@ const EventInvitation = () => {
                       className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/30"
                       onClick={openLocation}
                     >
-                      View in Google Maps
+                      {translations.viewInGoogleMaps}
                     </Button>
                   )}
                 </div>
@@ -379,7 +410,7 @@ const EventInvitation = () => {
                 onClick={addToCalendar}
               >
                 <Calendar className="h-5 w-5 mr-3" />
-                Add to Calendar
+                {translations.addToCalendar}
               </Button>
             </div>
           </CardContent>
@@ -387,7 +418,7 @@ const EventInvitation = () => {
 
         {/* Attendance Form */}
         <div className="w-full max-w-2xl mt-8">
-          <EventAttendanceForm eventId={event.id} />
+          <EventAttendanceForm eventId={event.id} language={event.language} />
         </div>
 
       </div>

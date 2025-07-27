@@ -23,6 +23,7 @@ interface Wedding {
   location_url?: string;
   whish_account?: string;
   background_color?: string;
+  language?: string;
   slug?: string;
 }
 
@@ -147,14 +148,54 @@ const Invitation: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString?: string) => {
+  const formatDate = (dateString?: string, language?: string) => {
     if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString('en-US', {
+    const locale = language === 'ar' ? 'ar-SA' : 'en-US';
+    return new Date(dateString).toLocaleDateString(locale, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const getTranslations = (language?: string) => {
+    if (language === 'ar') {
+      return {
+        playWeddingMusic: "تشغيل موسيقى الزفاف",
+        areGettingMarried: "على وشك الزواج",
+        swipeUp: "اسحب للأعلى",
+        days: "أيام",
+        hours: "ساعات", 
+        minutes: "دقائق",
+        seconds: "ثواني",
+        when: "متى",
+        where: "أين",
+        addToCalendar: "أضف للتقويم",
+        viewOnMap: "عرض على الخريطة",
+        contact: "اتصال",
+        loadingInvitation: "جاري تحميل الدعوة...",
+        invitationNotFound: "الدعوة غير موجودة",
+        invitationNotFoundDesc: "الدعوة التي تبحث عنها غير موجودة أو تم حذفها."
+      };
+    }
+    return {
+      playWeddingMusic: "Play Wedding Music",
+      areGettingMarried: "are getting married",
+      swipeUp: "Swipe Up", 
+      days: "Days",
+      hours: "Hours",
+      minutes: "Minutes", 
+      seconds: "Seconds",
+      when: "When",
+      where: "Where",
+      addToCalendar: "Add to Calendar",
+      viewOnMap: "View on Map",
+      contact: "Contact",
+      loadingInvitation: "Loading invitation...",
+      invitationNotFound: "Invitation Not Found",
+      invitationNotFoundDesc: "The invitation you're looking for doesn't exist or has been removed."
+    };
   };
 
   const addToCalendar = () => {
@@ -206,12 +247,15 @@ END:VCALENDAR`;
     }
   };
 
+  const isArabic = wedding?.language === 'ar';
+  const translations = getTranslations(wedding?.language);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading invitation...</p>
+          <p className="mt-4 text-muted-foreground">{translations.loadingInvitation}</p>
         </div>
       </div>
     );
@@ -221,15 +265,15 @@ END:VCALENDAR`;
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-2">Invitation Not Found</h1>
-          <p className="text-muted-foreground">The invitation you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-2xl font-bold text-destructive mb-2">{translations.invitationNotFound}</h1>
+          <p className="text-muted-foreground">{translations.invitationNotFoundDesc}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden ${isArabic ? 'rtl' : ''}`} style={{ fontFamily: isArabic ? 'Amiri, serif' : 'inherit' }}>
       {/* Background */}
       {wedding.background_image ? (
         <div
@@ -255,7 +299,7 @@ END:VCALENDAR`;
           onClick={playMusic}
         >
           <Play className="h-5 w-5 mr-2" />
-          Play Wedding Music
+          {translations.playWeddingMusic}
         </Button>
       )}
 
@@ -300,32 +344,32 @@ END:VCALENDAR`;
             {/* Getting Married */}
             <div className="mb-8">
               <p className="font-serif text-lg md:text-xl opacity-90 tracking-wider">
-                are getting married
+                {translations.areGettingMarried}
               </p>
             </div>
 
             {/* Countdown */}
             {wedding.wedding_date && (
               <div className="mb-12">
-                <div className="flex justify-center items-center gap-4 text-white">
+                <div className={`flex justify-center items-center gap-4 text-white ${isArabic ? 'flex-row-reverse' : ''}`}>
                   <div className="text-center">
                     <div className="text-3xl md:text-4xl font-bold">{timeLeft.days}</div>
-                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Days</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">{translations.days}</div>
                   </div>
                   <div className="text-2xl opacity-50">:</div>
                   <div className="text-center">
                     <div className="text-3xl md:text-4xl font-bold">{timeLeft.hours}</div>
-                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Hours</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">{translations.hours}</div>
                   </div>
                   <div className="text-2xl opacity-50">:</div>
                   <div className="text-center">
                     <div className="text-3xl md:text-4xl font-bold">{timeLeft.minutes}</div>
-                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Minutes</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">{translations.minutes}</div>
                   </div>
                   <div className="text-2xl opacity-50">:</div>
                   <div className="text-center">
                     <div className="text-3xl md:text-4xl font-bold">{timeLeft.seconds}</div>
-                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">Seconds</div>
+                    <div className="text-xs md:text-sm opacity-75 uppercase tracking-wider">{translations.seconds}</div>
                   </div>
                 </div>
               </div>
@@ -334,7 +378,7 @@ END:VCALENDAR`;
             {/* Scroll Indicator */}
             <div className="animate-bounce">
               <div className="flex flex-col items-center gap-2 text-white/80">
-                <p className="font-serif text-sm tracking-wider">Swipe Up</p>
+                <p className="font-serif text-sm tracking-wider">{translations.swipeUp}</p>
                 <div className="w-0.5 h-8 bg-white/60"></div>
               </div>
             </div>
@@ -362,8 +406,8 @@ END:VCALENDAR`;
                   {wedding.wedding_date && (
                     <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
                       <Calendar className="h-8 w-8 text-primary mx-auto mb-4" />
-                      <h3 className="font-serif text-xl font-semibold text-primary mb-2">When</h3>
-                      <p className="text-gray-700 leading-relaxed mb-3">{formatDate(wedding.wedding_date)}</p>
+                      <h3 className="font-serif text-xl font-semibold text-primary mb-2">{translations.when}</h3>
+                      <p className="text-gray-700 leading-relaxed mb-3">{formatDate(wedding.wedding_date, wedding.language)}</p>
                       <Button
                         onClick={addToCalendar}
                         variant="outline"
@@ -371,7 +415,7 @@ END:VCALENDAR`;
                         className="text-primary border-primary hover:bg-primary hover:text-white"
                       >
                         <CalendarPlus className="h-4 w-4 mr-2" />
-                        Add to Calendar
+                        {translations.addToCalendar}
                       </Button>
                     </div>
                   )}
@@ -379,7 +423,7 @@ END:VCALENDAR`;
                   {wedding.location_text && (
                     <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
                       <MapPin className="h-8 w-8 text-primary mx-auto mb-4" />
-                      <h3 className="font-serif text-xl font-semibold text-primary mb-2">Where</h3>
+                      <h3 className="font-serif text-xl font-semibold text-primary mb-2">{translations.where}</h3>
                       <p className="text-gray-700 leading-relaxed mb-3">{wedding.location_text}</p>
                       {wedding.location_url && (
                         <a
@@ -388,7 +432,7 @@ END:VCALENDAR`;
                           rel="noopener noreferrer"
                           className="text-primary hover:underline text-sm font-medium"
                         >
-                          View on Map
+                          {translations.viewOnMap}
                         </a>
                       )}
                     </div>
@@ -421,13 +465,13 @@ END:VCALENDAR`;
               {/* Contact Info */}
               {wedding.phone_number && (
                 <div className="text-center p-6 bg-white rounded-2xl shadow-lg mb-12">
-                  <div className="text-sm font-semibold text-primary mb-1">Contact</div>
+                  <div className="text-sm font-semibold text-primary mb-1">{translations.contact}</div>
                   <p className="text-gray-700">{wedding.phone_number}</p>
                 </div>
               )}
 
               {/* Attendance Form */}
-              <AttendanceForm weddingId={wedding.id} />
+              <AttendanceForm weddingId={wedding.id} language={wedding.language} />
             </div>
           </div>
         </div>
