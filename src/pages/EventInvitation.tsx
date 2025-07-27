@@ -167,6 +167,61 @@ const EventInvitation = () => {
     }
   }, [event]);
 
+  // Update meta tags for social sharing
+  useEffect(() => {
+    if (event) {
+      // Update page title
+      document.title = `${event.event_name} - E-cards Invitation`;
+      
+      // Update or create meta tags for social sharing
+      const updateMetaTag = (property: string, content: string) => {
+        let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      const updateMetaTagName = (name: string, content: string) => {
+        let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', name);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      // Update Open Graph tags
+      updateMetaTag('og:title', event.event_name);
+      updateMetaTag('og:description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
+      updateMetaTag('og:type', 'website');
+      
+      // Use event background image if available, otherwise use default
+      if (event.background_image) {
+        updateMetaTag('og:image', event.background_image);
+        updateMetaTag('og:image:width', '1200');
+        updateMetaTag('og:image:height', '630');
+      }
+      
+      updateMetaTag('og:url', window.location.href);
+
+      // Update Twitter Card tags
+      updateMetaTagName('twitter:card', 'summary_large_image');
+      updateMetaTagName('twitter:title', event.event_name);
+      updateMetaTagName('twitter:description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
+      
+      if (event.background_image) {
+        updateMetaTagName('twitter:image', event.background_image);
+      }
+
+      // Update meta description
+      updateMetaTagName('description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
+    }
+  }, [event]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
