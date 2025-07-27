@@ -26,6 +26,7 @@ interface Wedding {
   background_music: string;
   background_color?: string;
   language?: string;
+  attendance_deadline?: string;
   slug?: string;
   user_id?: number;
 }
@@ -51,6 +52,7 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
     location_url: wedding?.location_url || "",
     background_color: wedding?.background_color || "#f3f4f6",
     language: wedding?.language || "en",
+    attendance_deadline: wedding?.attendance_deadline || "",
   });
 
   const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
@@ -235,6 +237,18 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
                   onChange={handleInputChange}
                 />
               </div>
+            </div>
+
+            {/* Attendance Deadline */}
+            <div className="space-y-2">
+              <Label htmlFor="attendance_deadline">Attendance Deadline</Label>
+              <Input
+                id="attendance_deadline"
+                name="attendance_deadline"
+                type="date"
+                value={formData.attendance_deadline}
+                onChange={handleInputChange}
+              />
             </div>
 
             {/* Groom and Bride */}

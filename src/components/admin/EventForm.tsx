@@ -25,6 +25,7 @@ interface Event {
   background_color?: string;
   subtitle?: string;
   language?: string;
+  attendance_deadline?: string;
   slug?: string;
   user_id?: number;
 }
@@ -49,6 +50,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
     background_color: event?.background_color || "#f3f4f6",
     subtitle: event?.subtitle || "",
     language: event?.language || "en",
+    attendance_deadline: event?.attendance_deadline || "",
   });
 
   const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
@@ -222,8 +224,20 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   type="date"
                   value={formData.event_date}
                   onChange={handleInputChange}
-                />
-              </div>
+              />
+            </div>
+
+            {/* Attendance Deadline */}
+            <div className="space-y-2">
+              <Label htmlFor="attendance_deadline">Attendance Deadline</Label>
+              <Input
+                id="attendance_deadline"
+                name="attendance_deadline"
+                type="date"
+                value={formData.attendance_deadline}
+                onChange={handleInputChange}
+              />
+            </div>
             </div>
 
             {/* Subtitle */}

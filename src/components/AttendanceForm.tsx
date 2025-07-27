@@ -10,9 +10,10 @@ import { supabase } from '@/integrations/supabase/client';
 interface AttendanceFormProps {
   weddingId: number;
   language?: string;
+  attendanceDeadline?: string;
 }
 
-const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId, language }) => {
+const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId, language, attendanceDeadline }) => {
   const [status, setStatus] = useState<'Attending' | 'Not Attending' | ''>('');
   const [numberOfGuests, setNumberOfGuests] = useState<number>(1);
   const [guestNames, setGuestNames] = useState<string[]>(['']);
@@ -193,7 +194,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId, language }) 
           {translations.confirmPresence}
         </CardTitle>
         <p className="text-muted-foreground">
-          {translations.before} {new Date().toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {translations.before} {attendanceDeadline ? new Date(attendanceDeadline).toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : new Date().toLocaleDateString(isArabic ? 'ar-SA' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
       </CardHeader>
       <CardContent>

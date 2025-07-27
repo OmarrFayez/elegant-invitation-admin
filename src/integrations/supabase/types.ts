@@ -122,6 +122,7 @@ export type Database = {
       }
       events: {
         Row: {
+          attendance_deadline: string | null
           background_color: string | null
           background_image: string | null
           background_music: string | null
@@ -132,6 +133,7 @@ export type Database = {
           event_date: string | null
           event_name: string
           id: number
+          language: string | null
           location_text: string | null
           location_url: string | null
           max_attendance: number | null
@@ -143,6 +145,7 @@ export type Database = {
           wish_account: string | null
         }
         Insert: {
+          attendance_deadline?: string | null
           background_color?: string | null
           background_image?: string | null
           background_music?: string | null
@@ -153,6 +156,7 @@ export type Database = {
           event_date?: string | null
           event_name: string
           id?: number
+          language?: string | null
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
@@ -164,6 +168,7 @@ export type Database = {
           wish_account?: string | null
         }
         Update: {
+          attendance_deadline?: string | null
           background_color?: string | null
           background_image?: string | null
           background_music?: string | null
@@ -174,6 +179,7 @@ export type Database = {
           event_date?: string | null
           event_name?: string
           id?: number
+          language?: string | null
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
@@ -355,6 +361,7 @@ export type Database = {
       }
       weddings: {
         Row: {
+          attendance_deadline: string | null
           background_color: string | null
           background_image: string | null
           background_music: string | null
@@ -365,6 +372,7 @@ export type Database = {
           email: string | null
           groom_name: string | null
           id: number
+          language: string | null
           location_text: string | null
           location_url: string | null
           max_attendance: number | null
@@ -376,6 +384,7 @@ export type Database = {
           whish_account: string | null
         }
         Insert: {
+          attendance_deadline?: string | null
           background_color?: string | null
           background_image?: string | null
           background_music?: string | null
@@ -386,6 +395,7 @@ export type Database = {
           email?: string | null
           groom_name?: string | null
           id?: number
+          language?: string | null
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
@@ -397,6 +407,7 @@ export type Database = {
           whish_account?: string | null
         }
         Update: {
+          attendance_deadline?: string | null
           background_color?: string | null
           background_image?: string | null
           background_music?: string | null
@@ -407,6 +418,7 @@ export type Database = {
           email?: string | null
           groom_name?: string | null
           id?: number
+          language?: string | null
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null

@@ -24,6 +24,7 @@ interface Wedding {
   whish_account?: string;
   background_color?: string;
   language?: string;
+  attendance_deadline?: string;
   slug?: string;
 }
 
@@ -471,7 +472,7 @@ END:VCALENDAR`;
               )}
 
               {/* Attendance Form */}
-              <AttendanceForm weddingId={wedding.id} language={wedding.language} />
+              <AttendanceForm weddingId={wedding.id} language={wedding.language} attendanceDeadline={wedding.attendance_deadline} />
             </div>
           </div>
         </div>
