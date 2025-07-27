@@ -74,7 +74,7 @@ export function AdminSidebar() {
         {!isCollapsed && (
           <div className="px-4 py-6">
             <h2 className="text-lg font-semibold">Admin Panel</h2>
-            <p className="text-sm text-muted-foreground">Wedding Invitations</p>
+            <p className="text-sm text-muted-foreground">Invitations</p>
             {user && (
               <p className="text-xs text-muted-foreground mt-1">Welcome, {user.name}</p>
             )}
