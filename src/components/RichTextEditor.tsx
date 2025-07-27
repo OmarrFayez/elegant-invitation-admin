@@ -6,25 +6,28 @@ interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  isArabic?: boolean;
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
   value,
   onChange,
-  placeholder = "Enter description..."
+  placeholder = "Enter description...",
+  isArabic = false
 }) => {
   const quillRef = useRef<ReactQuill>(null);
 
   const modules = {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'font': ['sans-serif', 'serif', 'monospace'] }],
+      [{ 'font': ['sans-serif', 'serif', 'monospace', 'arabic-naskh', 'arabic-kufi'] }],
       [{ 'size': ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
       [{ 'indent': '-1'}, { 'indent': '+1' }],
       [{ 'align': [] }],
+      [{ 'direction': 'rtl' }],
       ['link', 'image'],
       ['clean'],
       ['code-block']
@@ -36,7 +39,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     'bold', 'italic', 'underline', 'strike',
     'color', 'background',
     'list', 'bullet',
-    'indent', 'align',
+    'indent', 'align', 'direction',
     'link', 'image',
     'code-block'
   ];
@@ -64,6 +67,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       .ql-font-sans-serif { font-family: 'Arial', sans-serif; }
       .ql-font-serif { font-family: 'Georgia', serif; }
       .ql-font-monospace { font-family: 'Monaco', monospace; }
+      .ql-font-arabic-naskh { font-family: 'Amiri', 'Traditional Arabic', serif; }
+      .ql-font-arabic-kufi { font-family: 'Aref Ruqaa', 'Arabic Typesetting', serif; }
     `;
     document.head.appendChild(style);
     
@@ -84,7 +89,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         placeholder={placeholder}
         style={{ 
           backgroundColor: 'white',
-          minHeight: '200px'
+          minHeight: '200px',
+          direction: isArabic ? 'rtl' : 'ltr',
+          textAlign: isArabic ? 'right' : 'left'
         }}
       />
     </div>

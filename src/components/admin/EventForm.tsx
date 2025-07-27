@@ -24,6 +24,7 @@ interface Event {
   background_music: string;
   background_color?: string;
   subtitle?: string;
+  language?: string;
   slug?: string;
   user_id?: number;
 }
@@ -47,6 +48,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
     location_url: event?.location_url || "",
     background_color: event?.background_color || "#f3f4f6",
     subtitle: event?.subtitle || "",
+    language: event?.language || "en",
   });
 
   const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
@@ -182,6 +184,22 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Language Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="language">Language *</Label>
+              <select
+                id="language"
+                name="language"
+                className="w-full border rounded p-2"
+                value={formData.language}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="en">English</option>
+                <option value="ar">Arabic</option>
+              </select>
+            </div>
+
             {/* Event Name and Date */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -192,6 +210,8 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   value={formData.event_name}
                   onChange={handleInputChange}
                   required
+                  className={formData.language === 'ar' ? 'text-right' : ''}
+                  dir={formData.language === 'ar' ? 'rtl' : 'ltr'}
                 />
               </div>
               <div className="space-y-2">
@@ -215,6 +235,8 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                 value={formData.subtitle}
                 onChange={handleInputChange}
                 placeholder="Event subtitle (appears under countdown timer)"
+                className={formData.language === 'ar' ? 'text-right' : ''}
+                dir={formData.language === 'ar' ? 'rtl' : 'ltr'}
               />
             </div>
 
@@ -227,6 +249,8 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   name="phone_number"
                   value={formData.phone_number}
                   onChange={handleInputChange}
+                  className={formData.language === 'ar' ? 'text-right' : ''}
+                  dir={formData.language === 'ar' ? 'rtl' : 'ltr'}
                 />
               </div>
               <div className="space-y-2">
@@ -249,6 +273,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                 onChange={(value) =>
                   setFormData(prev => ({ ...prev, description1: value }))
                 }
+                isArabic={formData.language === 'ar'}
               />
             </div>
             <div className="space-y-2">
@@ -258,6 +283,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                 onChange={(value) =>
                   setFormData(prev => ({ ...prev, description2: value }))
                 }
+                isArabic={formData.language === 'ar'}
               />
             </div>
 
@@ -293,6 +319,8 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   name="location_text"
                   value={formData.location_text}
                   onChange={handleInputChange}
+                  className={formData.language === 'ar' ? 'text-right' : ''}
+                  dir={formData.language === 'ar' ? 'rtl' : 'ltr'}
                 />
               </div>
               <div className="space-y-2">
