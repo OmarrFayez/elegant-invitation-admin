@@ -372,7 +372,7 @@ const EventInvitation = () => {
 
           {/* Subtitle */}
           {event.subtitle && (
-            <p className="text-xl md:text-2xl text-white/90 mb-8 font-light text-center">
+            <p className="text-xl md:text-2xl text-white/90 mb-8 font-bold font-serif tracking-tight text-center">
               {event.subtitle}
             </p>
           )}
