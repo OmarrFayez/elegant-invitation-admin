@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Phone, Calendar, VolumeX, Volume2, ArrowLeft } from "lucide-react";
@@ -18,6 +19,7 @@ interface Event {
   location_text: string;
   location_url: string;
   background_image: string;
+  mobile_background_image?: string;
   background_music: string;
   background_color?: string;
   subtitle?: string;
@@ -29,6 +31,7 @@ const EventInvitation = () => {
   const { idOrSlug } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -285,9 +288,14 @@ const EventInvitation = () => {
     );
   }
 
-  const backgroundStyle = event.background_image
+  // Choose the appropriate background image based on device type
+  const backgroundImage = isMobile && event.mobile_background_image 
+    ? event.mobile_background_image 
+    : event.background_image;
+
+  const backgroundStyle = backgroundImage
     ? {
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${event.background_image})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
