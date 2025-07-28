@@ -290,7 +290,8 @@ const EventInvitation = () => {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${event.background_image})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
       }
     : {
         background: event.background_color 
@@ -300,6 +301,19 @@ const EventInvitation = () => {
 
   return (
     <div className={`min-h-screen relative overflow-hidden font-sans ${isArabic ? 'rtl' : ''}`} style={{ ...backgroundStyle, fontFamily: isArabic ? 'Amiri, serif' : 'inherit' }}>
+      
+      {/* Mobile responsive background overlay for better image display */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @media (max-width: 768px) {
+            .min-h-screen {
+              background-attachment: scroll !important;
+              background-size: cover !important;
+              background-position: center center !important;
+            }
+          }
+        `
+      }} />
 
       {/* Music Toggle */}
       {event.background_music && (

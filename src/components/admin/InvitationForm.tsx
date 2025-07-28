@@ -376,6 +376,9 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="background_image">Background Image</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Recommended size: 1920x1080 pixels (16:9 aspect ratio)
+                </p>
                 <Input
                   id="background_image"
                   type="file"
