@@ -21,6 +21,7 @@ interface Event {
   location_text: string;
   location_url: string;
   background_image: string;
+  mobile_background_image?: string;
   background_music: string;
   background_color?: string;
   subtitle?: string;
@@ -58,6 +59,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
 
   const [loading, setLoading] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
+  const [mobileBackgroundImage, setMobileBackgroundImage] = useState<File | null>(null);
   const [backgroundMusic, setBackgroundMusic] = useState<File | null>(null);
   const { toast } = useToast();
 
@@ -103,10 +105,14 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
 
     try {
       let backgroundImagePath = event?.background_image || "";
+      let mobileBackgroundImagePath = event?.mobile_background_image || "";
       let backgroundMusicPath = event?.background_music || "";
 
       if (backgroundImage) {
         backgroundImagePath = await handleFileUpload(backgroundImage, "images");
+      }
+      if (mobileBackgroundImage) {
+        mobileBackgroundImagePath = await handleFileUpload(mobileBackgroundImage, "images");
       }
       if (backgroundMusic) {
         backgroundMusicPath = await handleFileUpload(backgroundMusic, "music");
@@ -119,6 +125,7 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
           : null,
         attendance_deadline: formData.attendance_deadline || null,
         background_image: backgroundImagePath,
+        mobile_background_image: mobileBackgroundImagePath,
         background_music: backgroundMusicPath,
         user_id: selectedUserId,
       };
@@ -351,9 +358,9 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
             </div>
 
             {/* File Upload and Background Color */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="background_image">Background Image</Label>
+                <Label htmlFor="background_image">Background Image (Desktop)</Label>
                 <p className="text-sm text-muted-foreground mb-2">
                   Recommended size: 1920x1080 pixels (16:9 aspect ratio)
                 </p>
@@ -366,6 +373,23 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   }
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="mobile_background_image">Background Image (Mobile)</Label>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Recommended size: 1080x1920 pixels (9:16 aspect ratio)
+                </p>
+                <Input
+                  id="mobile_background_image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setMobileBackgroundImage(e.target.files?.[0] || null)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="background_music">Background Music</Label>
                 <Input
