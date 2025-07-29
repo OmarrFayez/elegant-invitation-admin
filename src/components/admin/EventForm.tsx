@@ -131,10 +131,11 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
       };
 
       // Generate slug for new events or when name changes
-      if (!event || event.event_name !== formData.event_name) {
+      if (!event || event.event_name !== formData.event_name || event.language !== formData.language) {
         const { data: slugData, error: slugError } = await supabase
           .rpc('generate_event_slug', {
-            event_name: formData.event_name
+            event_name: formData.event_name,
+            language: formData.language
           });
         
         if (slugError) throw slugError;

@@ -134,11 +134,13 @@ const InvitationForm = ({ wedding, onClose }: InvitationFormProps) => {
       // Generate slug for new weddings or when names change
       if (!wedding || 
           wedding.groom_name !== formData.groom_name || 
-          wedding.bride_name !== formData.bride_name) {
+          wedding.bride_name !== formData.bride_name ||
+          wedding.language !== formData.language) {
         const { data: slugData, error: slugError } = await supabase
           .rpc('generate_wedding_slug', {
             groom_name: formData.groom_name,
-            bride_name: formData.bride_name
+            bride_name: formData.bride_name,
+            language: formData.language
           });
         
         if (slugError) throw slugError;

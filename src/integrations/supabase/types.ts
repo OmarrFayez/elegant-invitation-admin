@@ -451,15 +451,19 @@ export type Database = {
     }
     Functions: {
       generate_customized_invitation_slug: {
-        Args: { design_name: string }
+        Args:
+          | { design_name: string }
+          | { design_name: string; language?: string }
         Returns: string
       }
       generate_event_slug: {
-        Args: { event_name: string }
+        Args: { event_name: string } | { event_name: string; language?: string }
         Returns: string
       }
       generate_wedding_slug: {
-        Args: { groom_name: string; bride_name: string }
+        Args:
+          | { groom_name: string; bride_name: string }
+          | { groom_name: string; bride_name: string; language?: string }
         Returns: string
       }
       get_current_user_id: {
