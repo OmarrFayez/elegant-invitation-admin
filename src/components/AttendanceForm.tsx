@@ -138,8 +138,8 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({ weddingId, language, at
       return {
         confirmPresence: "الرجاء تأكيد حضورك",
         before: "قبل",
-        attending: "حاضر",
-        notAttending: "غير حاضر", 
+        attending: "تأكيد",
+        notAttending: "اعتذار", 
         phoneNumber: "رقم الهاتف",
         enterPhoneNumber: "أدخل رقم الهاتف (أرقام فقط)",
         numberOfGuestsAttending: "عدد الضيوف الحاضرين",
