@@ -1,14 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
 
-// Set current user ID in database context for RLS
-export const setDatabaseContext = async (userId: number | null) => {
-  if (userId) {
-    // Use direct SQL to set the configuration
-    await supabase.from('users').select('user_id').eq('user_id', userId).limit(1);
-    // The RLS policies will automatically use the current session context
-  }
-};
-
 // Check if current user is admin
 export const isCurrentUserAdmin = async (): Promise<boolean> => {
   try {
@@ -24,15 +15,26 @@ export const isCurrentUserAdmin = async (): Promise<boolean> => {
   }
 };
 
-// Secure fetch wrapper that ensures user context is set
+// Check if user has specific role (placeholder for future implementation)
+export const hasRole = async (role: string): Promise<boolean> => {
+  try {
+    // For now, return false until the database function is implemented
+    console.log('hasRole function not yet implemented for role:', role);
+    return false;
+  } catch (error) {
+    console.error('Error checking role:', error);
+    return false;
+  }
+};
+
+// Secure fetch wrapper for authenticated queries
 export const secureQuery = async <T>(
-  queryFn: () => Promise<{ data: T | null; error: any }>,
-  userId?: number
+  queryFn: () => Promise<{ data: T | null; error: any }>
 ): Promise<{ data: T | null; error: any }> => {
   try {
-    // Set user context if provided
-    if (userId) {
-      await setDatabaseContext(userId);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      return { data: null, error: { message: 'User not authenticated' } };
     }
     
     return await queryFn();

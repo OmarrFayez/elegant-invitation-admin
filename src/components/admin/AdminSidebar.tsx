@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const navigationItems = [
   {
@@ -45,11 +46,24 @@ export function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Success",
+        description: "Logged out successfully",
+      });
+      navigate('/auth');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to logout",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -76,7 +90,7 @@ export function AdminSidebar() {
             <h2 className="text-lg font-semibold">Admin Panel</h2>
             <p className="text-sm text-muted-foreground">Invitations</p>
             {user && (
-              <p className="text-xs text-muted-foreground mt-1">Welcome, {user.name}</p>
+              <p className="text-xs text-muted-foreground mt-1">Welcome, {user.email}</p>
             )}
           </div>
         )}

@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { isCurrentUserAdmin, setDatabaseContext } from '@/lib/auth-middleware';
+import { isCurrentUserAdmin } from '@/lib/auth-middleware';
 
 interface ProtectedAdminRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({ children }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAdminAccess = async () => {
-      if (!isAuthenticated || !user) {
-        navigate('/login');
+      if (authLoading) return;
+      
+      if (!isAuthenticated) {
+        navigate('/auth');
         return;
       }
 
       try {
-        // Set database context for RLS
-        await setDatabaseContext(user.user_id);
-        
-        // Check admin status
+        // Check admin status using Supabase auth
         const adminStatus = await isCurrentUserAdmin();
         setIsAdmin(adminStatus);
         
@@ -33,23 +32,21 @@ const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({ children }) =
         }
       } catch (error) {
         console.error('Error checking admin access:', error);
-        navigate('/login');
+        navigate('/auth');
       } finally {
         setIsLoading(false);
       }
     };
 
     checkAdminAccess();
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
-  if (!isAuthenticated || isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">
-            {!isAuthenticated ? 'Redirecting to login...' : 'Checking permissions...'}
-          </p>
+          <p className="mt-4 text-muted-foreground">Checking permissions...</p>
         </div>
       </div>
     );

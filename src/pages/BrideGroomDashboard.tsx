@@ -39,7 +39,7 @@ const BrideGroomDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
   const { toast } = useToast();
-  const { logout, user } = useAuth();
+  const { signOut, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -112,13 +112,21 @@ const BrideGroomDashboard: React.FC = () => {
     fetchAttendance(wedding.id);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out",
-    });
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out",
+      });
+      navigate('/auth');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to logout",
+        variant: "destructive",
+      });
+    }
   };
 
   const formatDate = (dateString?: string) => {
@@ -179,8 +187,8 @@ const BrideGroomDashboard: React.FC = () => {
             <Button 
               variant="outline" 
               onClick={() => {
-                logout();
-                navigate('/login');
+                signOut();
+                navigate('/auth');
               }}
               className="flex items-center gap-2 mx-auto"
             >
@@ -206,7 +214,7 @@ const BrideGroomDashboard: React.FC = () => {
             {user && (
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Welcome back,</p>
-                <p className="font-medium">{user.name}</p>
+                <p className="font-medium">{user.email}</p>
               </div>
             )}
             <Button 
