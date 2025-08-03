@@ -10,7 +10,9 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('Index: isAuthenticated =', isAuthenticated, 'loading =', loading);
     if (!loading && !isAuthenticated) {
+      console.log('Index: Redirecting to login...');
       navigate('/login');
     }
   }, [isAuthenticated, loading, navigate]);

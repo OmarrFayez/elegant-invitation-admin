@@ -26,9 +26,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Check for existing session on mount
+    console.log('useAuth: Checking for existing session...');
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
+      console.log('useAuth: Found stored user:', JSON.parse(storedUser));
       setUser(JSON.parse(storedUser));
+    } else {
+      console.log('useAuth: No stored user found');
     }
     setLoading(false);
   }, []);
@@ -72,6 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const isAuthenticated = !!user;
+  console.log('useAuth: isAuthenticated =', isAuthenticated, 'loading =', loading);
 
   return (
     <AuthContext.Provider value={{ 
