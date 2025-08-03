@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      navigate('/auth');
+      navigate('/login');
     }
   }, [isAuthenticated, loading, navigate]);
 

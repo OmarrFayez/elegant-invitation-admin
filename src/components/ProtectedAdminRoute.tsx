@@ -18,7 +18,7 @@ const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({ children }) =
       if (authLoading) return;
       
       if (!isAuthenticated) {
-        navigate('/auth');
+        navigate('/login');
         return;
       }
 

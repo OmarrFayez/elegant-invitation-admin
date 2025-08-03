@@ -119,7 +119,7 @@ const BrideGroomDashboard: React.FC = () => {
         title: "Logged out",
         description: "You have been successfully logged out",
       });
-      navigate('/auth');
+      navigate('/login');
     } catch (error) {
       toast({
         title: "Error",
@@ -188,7 +188,7 @@ const BrideGroomDashboard: React.FC = () => {
               variant="outline" 
               onClick={() => {
                 signOut();
-                navigate('/auth');
+                navigate('/login');
               }}
               className="flex items-center gap-2 mx-auto"
             >

@@ -152,7 +152,7 @@ const EventDashboard: React.FC = () => {
         title: "Logged out",
         description: "You have been successfully logged out",
       });
-      navigate('/auth');
+      navigate('/login');
     } catch (error) {
       toast({
         title: "Error",
@@ -236,7 +236,7 @@ const EventDashboard: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/login')}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />

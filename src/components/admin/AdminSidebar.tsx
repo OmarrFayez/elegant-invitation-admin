@@ -56,7 +56,7 @@ export function AdminSidebar() {
         title: "Success",
         description: "Logged out successfully",
       });
-      navigate('/auth');
+      navigate('/login');
     } catch (error) {
       toast({
         title: "Error",

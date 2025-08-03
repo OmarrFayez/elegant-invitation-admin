@@ -8,13 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff } from 'lucide-react';
 
-const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp, isAuthenticated } = useAuth();
+  const { signIn, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -29,9 +28,7 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = isLogin 
-        ? await signIn(email, password)
-        : await signUp(email, password);
+      const { error } = await signIn(email, password);
 
       if (error) {
         toast({
@@ -41,15 +38,10 @@ const Auth = () => {
         });
       } else {
         toast({
-          title: isLogin ? "Signed in successfully!" : "Account created successfully!",
-          description: isLogin 
-            ? "Welcome back!" 
-            : "Please check your email to verify your account.",
+          title: "Signed in successfully!",
+          description: "Welcome back!",
         });
-        
-        if (isLogin) {
-          navigate('/');
-        }
+        navigate('/');
       }
     } catch (error) {
       toast({
@@ -67,13 +59,10 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl text-center">
-            {isLogin ? 'Sign In' : 'Create Account'}
+            Sign In
           </CardTitle>
           <CardDescription className="text-center">
-            {isLogin 
-              ? 'Enter your credentials to access your account'
-              : 'Enter your details to create a new account'
-            }
+            Enter your credentials to access your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -116,28 +105,13 @@ const Auth = () => {
               </div>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading 
-                ? (isLogin ? 'Signing in...' : 'Creating account...') 
-                : (isLogin ? 'Sign In' : 'Create Account')
-              }
+              {loading ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-primary hover:underline"
-            >
-              {isLogin 
-                ? "Don't have an account? Sign up" 
-                : "Already have an account? Sign in"
-              }
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default Auth;
+export default Login;
