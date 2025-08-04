@@ -41,6 +41,7 @@ const Login = () => {
           title: "Signed in successfully!",
           description: "Welcome back!",
         });
+        // Let the Index page handle role-based redirecting
         navigate('/');
       }
     } catch (error) {

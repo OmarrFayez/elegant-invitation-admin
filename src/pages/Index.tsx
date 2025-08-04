@@ -6,16 +6,34 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 
 const Index = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Index: isAuthenticated =', isAuthenticated, 'loading =', loading);
-    if (!loading && !isAuthenticated) {
-      console.log('Index: Redirecting to login...');
-      navigate('/login');
+    console.log('Index: isAuthenticated =', isAuthenticated, 'loading =', loading, 'user =', user);
+    if (!loading) {
+      if (!isAuthenticated) {
+        console.log('Index: Redirecting to login...');
+        navigate('/login');
+      } else if (user) {
+        // Redirect based on role_id
+        switch (user.role_id) {
+          case 1: // Admin
+            navigate('/admin');
+            break;
+          case 2: // Invitation user
+            navigate('/dashboard');
+            break;
+          case 3: // Event view user
+            navigate('/event-dashboard');
+            break;
+          default:
+            // If no role or unknown role, stay on index
+            console.log('Index: Unknown role_id:', user.role_id);
+        }
+      }
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [isAuthenticated, loading, navigate, user]);
 
   // Show loading while checking authentication
   if (loading) {
