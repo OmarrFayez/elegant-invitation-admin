@@ -88,7 +88,7 @@ const EventInvitation = () => {
           title: getTranslations(undefined).eventNotFound,
           variant: "destructive",
         });
-        navigate("/");
+        navigate("/system/");
         return;
       }
 
@@ -99,7 +99,7 @@ const EventInvitation = () => {
         description: error.message,
         variant: "destructive",
       });
-      navigate("/");
+      navigate("/system/");
     } finally {
       setLoading(false);
     }
@@ -279,7 +279,7 @@ const EventInvitation = () => {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
         <Card className="p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">{translations.eventNotFound}</h2>
-          <Button onClick={() => navigate("/")} className="mt-4">
+          <Button onClick={() => navigate("/system/")} className="mt-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
             {translations.goHome}
           </Button>
