@@ -307,7 +307,7 @@ const Invitations = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => window.open(`/invitation/${wedding.slug || wedding.id}`, '_blank')}
+                          onClick={() => window.open(`/system/invitation/${wedding.slug || wedding.id}`, '_blank')}
                           title="View Invitation Card"
                         >
                           <ExternalLink className="h-4 w-4" />
