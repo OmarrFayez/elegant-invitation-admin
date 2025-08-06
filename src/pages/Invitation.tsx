@@ -42,6 +42,72 @@ const Invitation: React.FC = () => {
   const [showPlayButton, setShowPlayButton] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Update meta tags for social sharing
+  useEffect(() => {
+    if (wedding) {
+      // Create title and description for OG tags
+      const weddingTitle = wedding.wedding_name || `${wedding.groom_name} & ${wedding.bride_name} Wedding`;
+      const coupleNames = [wedding.groom_name, wedding.bride_name].filter(Boolean).join(' & ');
+      
+      // Update page title
+      document.title = `${weddingTitle} - Wedding Invitation`;
+      
+      // Update or create meta tags for social sharing
+      const updateMetaTag = (property: string, content: string) => {
+        let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      const updateMetaTagName = (name: string, content: string) => {
+        let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', name);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      // Update Open Graph tags
+      updateMetaTag('og:title', weddingTitle);
+      updateMetaTag('og:description', coupleNames ? `Join ${coupleNames} in celebrating their special day` : 'You are invited to this wedding celebration');
+      updateMetaTag('og:type', 'website');
+      updateMetaTag('og:url', window.location.href);
+      
+      // Use wedding background image if available
+      if (wedding.background_image) {
+        const absoluteImageUrl = wedding.background_image.startsWith('http') 
+          ? wedding.background_image 
+          : `${window.location.origin}${wedding.background_image}`;
+        updateMetaTag('og:image', absoluteImageUrl);
+        updateMetaTag('og:image:width', '1200');
+        updateMetaTag('og:image:height', '630');
+        updateMetaTag('og:image:alt', `${weddingTitle} invitation`);
+      }
+
+      // Update Twitter Card tags
+      updateMetaTagName('twitter:card', 'summary_large_image');
+      updateMetaTagName('twitter:title', weddingTitle);
+      updateMetaTagName('twitter:description', coupleNames ? `Join ${coupleNames} in celebrating their special day` : 'You are invited to this wedding celebration');
+      
+      if (wedding.background_image) {
+        const absoluteImageUrl = wedding.background_image.startsWith('http') 
+          ? wedding.background_image 
+          : `${window.location.origin}${wedding.background_image}`;
+        updateMetaTagName('twitter:image', absoluteImageUrl);
+        updateMetaTagName('twitter:image:alt', `${weddingTitle} invitation`);
+      }
+
+      // Update meta description
+      updateMetaTagName('description', coupleNames ? `Join ${coupleNames} in celebrating their special day` : 'You are invited to this wedding celebration');
+    }
+  }, [wedding]);
+
   useEffect(() => {
     const fetchWedding = async () => {
       if (!idOrSlug) return;

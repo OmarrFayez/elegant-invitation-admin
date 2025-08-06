@@ -202,7 +202,7 @@ const EventInvitation = () => {
   useEffect(() => {
     if (event) {
       // Update page title
-      document.title = `${event.event_name} - E-cards Invitation`;
+      document.title = `${event.event_name} - Event Invitation`;
       
       // Update or create meta tags for social sharing
       const updateMetaTag = (property: string, content: string) => {
