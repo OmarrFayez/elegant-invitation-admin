@@ -25,6 +25,8 @@ interface Event {
   subtitle?: string;
   language?: string;
   slug?: string;
+  meta_title?: string;
+  meta_description?: string;
 }
 
 const EventInvitation = () => {
@@ -198,11 +200,14 @@ const EventInvitation = () => {
     }
   }, [event]);
 
-  // Update meta tags for social sharing
   useEffect(() => {
     if (event) {
+      // Use custom meta title and description if provided, otherwise use defaults
+      const eventTitle = event.meta_title || event.event_name;
+      const eventDescription = event.meta_description || `Join us for ${event.event_name}`;
+      
       // Update page title
-      document.title = `${event.event_name} - Event Invitation`;
+      document.title = `${eventTitle} - Event Invitation`;
       
       // Update or create meta tags for social sharing
       const updateMetaTag = (property: string, content: string) => {
@@ -226,40 +231,37 @@ const EventInvitation = () => {
       };
 
       // Update Open Graph tags
-      updateMetaTag('og:title', event.event_name);
-      updateMetaTag('og:description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
+      updateMetaTag('og:title', eventTitle);
+      updateMetaTag('og:description', eventDescription);
       updateMetaTag('og:type', 'website');
+      updateMetaTag('og:url', window.location.href);
       
-      // Use event background image if available, otherwise use default
+      // Use event background image if available
       if (event.background_image) {
-        // Ensure the image URL is absolute for social media sharing
         const absoluteImageUrl = event.background_image.startsWith('http') 
           ? event.background_image 
           : `${window.location.origin}${event.background_image}`;
         updateMetaTag('og:image', absoluteImageUrl);
         updateMetaTag('og:image:width', '1200');
         updateMetaTag('og:image:height', '630');
-        updateMetaTag('og:image:alt', `${event.event_name} invitation`);
+        updateMetaTag('og:image:alt', `${eventTitle} invitation`);
       }
-      
-      updateMetaTag('og:url', window.location.href);
 
       // Update Twitter Card tags
       updateMetaTagName('twitter:card', 'summary_large_image');
-      updateMetaTagName('twitter:title', event.event_name);
-      updateMetaTagName('twitter:description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
+      updateMetaTagName('twitter:title', eventTitle);
+      updateMetaTagName('twitter:description', eventDescription);
       
       if (event.background_image) {
-        // Ensure the image URL is absolute for social media sharing
         const absoluteImageUrl = event.background_image.startsWith('http') 
           ? event.background_image 
           : `${window.location.origin}${event.background_image}`;
         updateMetaTagName('twitter:image', absoluteImageUrl);
-        updateMetaTagName('twitter:image:alt', `${event.event_name} invitation`);
+        updateMetaTagName('twitter:image:alt', `${eventTitle} invitation`);
       }
 
       // Update meta description
-      updateMetaTagName('description', event.description1 ? event.description1.replace(/<[^>]*>/g, '') : 'You are invited to this special event');
+      updateMetaTagName('description', eventDescription);
     }
   }, [event]);
 

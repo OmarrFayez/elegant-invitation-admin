@@ -29,6 +29,8 @@ interface Event {
   attendance_deadline?: string;
   slug?: string;
   user_id?: number;
+  meta_title?: string;
+  meta_description?: string;
 }
 
 interface EventFormProps {
@@ -52,6 +54,8 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
     subtitle: event?.subtitle || "",
     language: event?.language || "en",
     attendance_deadline: event?.attendance_deadline || "",
+    meta_title: event?.meta_title || "",
+    meta_description: event?.meta_description || "",
   });
 
   const [users, setUsers] = useState<{ user_id: number; name: string }[]>([]);
@@ -441,6 +445,35 @@ const EventForm = ({ event, onClose }: EventFormProps) => {
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Meta Tags for Social Sharing */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Social Media Sharing</h3>
+              <div className="space-y-2">
+                <Label htmlFor="meta_title">Meta Title</Label>
+                <Input
+                  id="meta_title"
+                  name="meta_title"
+                  value={formData.meta_title}
+                  onChange={handleInputChange}
+                  placeholder="Custom title for social sharing (WhatsApp, Facebook, etc.)"
+                  className={formData.language === 'ar' ? 'text-right' : ''}
+                  dir={formData.language === 'ar' ? 'rtl' : 'ltr'}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="meta_description">Meta Description</Label>
+                <Input
+                  id="meta_description"
+                  name="meta_description"
+                  value={formData.meta_description}
+                  onChange={handleInputChange}
+                  placeholder="Custom description for social sharing"
+                  className={formData.language === 'ar' ? 'text-right' : ''}
+                  dir={formData.language === 'ar' ? 'rtl' : 'ltr'}
+                />
+              </div>
             </div>
 
             {/* Buttons */}

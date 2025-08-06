@@ -137,6 +137,8 @@ export type Database = {
           location_text: string | null
           location_url: string | null
           max_attendance: number | null
+          meta_description: string | null
+          meta_title: string | null
           mobile_background_image: string | null
           phone_number: string | null
           slug: string | null
@@ -161,6 +163,8 @@ export type Database = {
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
           mobile_background_image?: string | null
           phone_number?: string | null
           slug?: string | null
@@ -185,6 +189,8 @@ export type Database = {
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
           mobile_background_image?: string | null
           phone_number?: string | null
           slug?: string | null
@@ -379,6 +385,8 @@ export type Database = {
           location_text: string | null
           location_url: string | null
           max_attendance: number | null
+          meta_description: string | null
+          meta_title: string | null
           mobile_background_image: string | null
           phone_number: string | null
           slug: string | null
@@ -403,6 +411,8 @@ export type Database = {
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
           mobile_background_image?: string | null
           phone_number?: string | null
           slug?: string | null
@@ -427,6 +437,8 @@ export type Database = {
           location_text?: string | null
           location_url?: string | null
           max_attendance?: number | null
+          meta_description?: string | null
+          meta_title?: string | null
           mobile_background_image?: string | null
           phone_number?: string | null
           slug?: string | null

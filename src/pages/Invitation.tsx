@@ -26,6 +26,8 @@ interface Wedding {
   language?: string;
   attendance_deadline?: string;
   slug?: string;
+  meta_title?: string;
+  meta_description?: string;
 }
 
 const Invitation: React.FC = () => {
@@ -41,13 +43,16 @@ const Invitation: React.FC = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-
   // Update meta tags for social sharing
   useEffect(() => {
     if (wedding) {
-      // Create title and description for OG tags
-      const weddingTitle = wedding.wedding_name || `${wedding.groom_name} & ${wedding.bride_name} Wedding`;
-      const coupleNames = [wedding.groom_name, wedding.bride_name].filter(Boolean).join(' & ');
+      // Use custom meta title and description if provided, otherwise generate defaults
+      const weddingTitle = wedding.meta_title || wedding.wedding_name || `${wedding.groom_name} & ${wedding.bride_name} Wedding`;
+      const weddingDescription = wedding.meta_description || (
+        [wedding.groom_name, wedding.bride_name].filter(Boolean).length > 0 
+          ? `Join ${[wedding.groom_name, wedding.bride_name].filter(Boolean).join(' & ')} in celebrating their special day`
+          : 'You are invited to this wedding celebration'
+      );
       
       // Update page title
       document.title = `${weddingTitle} - Wedding Invitation`;
@@ -75,7 +80,7 @@ const Invitation: React.FC = () => {
 
       // Update Open Graph tags
       updateMetaTag('og:title', weddingTitle);
-      updateMetaTag('og:description', coupleNames ? `Join ${coupleNames} in celebrating their special day` : 'You are invited to this wedding celebration');
+      updateMetaTag('og:description', weddingDescription);
       updateMetaTag('og:type', 'website');
       updateMetaTag('og:url', window.location.href);
       
@@ -93,7 +98,7 @@ const Invitation: React.FC = () => {
       // Update Twitter Card tags
       updateMetaTagName('twitter:card', 'summary_large_image');
       updateMetaTagName('twitter:title', weddingTitle);
-      updateMetaTagName('twitter:description', coupleNames ? `Join ${coupleNames} in celebrating their special day` : 'You are invited to this wedding celebration');
+      updateMetaTagName('twitter:description', weddingDescription);
       
       if (wedding.background_image) {
         const absoluteImageUrl = wedding.background_image.startsWith('http') 
@@ -104,7 +109,7 @@ const Invitation: React.FC = () => {
       }
 
       // Update meta description
-      updateMetaTagName('description', coupleNames ? `Join ${coupleNames} in celebrating their special day` : 'You are invited to this wedding celebration');
+      updateMetaTagName('description', weddingDescription);
     }
   }, [wedding]);
 
