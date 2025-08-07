@@ -152,6 +152,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
         selectAttendanceStatus: "الرجاء اختيار حالة الحضور",
         enterYourPhoneNumber: "الرجاء إدخال رقم هاتفك",
         fillFirstGuestName: "الرجاء ملء اسم الضيف الأول على الأقل",
+        optional: "اختياري",
         alreadySubmitted: "تم الإرسال مسبقاً",
         alreadyFilledForm: "لقد قمت بملء النموذج بهذا الرقم من قبل.",
         success: "نجح!",
@@ -176,6 +177,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
       selectAttendanceStatus: "Please select your attendance status",
       enterYourPhoneNumber: "Please enter your phone number", 
       fillFirstGuestName: "Please fill in at least the first guest name",
+      optional: "optional",
       alreadySubmitted: "Already Submitted",
       alreadyFilledForm: "You have already filled the form with this phone number.",
       success: "Success!",
@@ -232,7 +234,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
             <>
               <div className="space-y-2">
                 <Label htmlFor="phoneNumber" className="text-primary font-semibold">
-                  {translations.phoneNumber}
+                  {translations.phoneNumber}<span className="text-red-500 ml-1">*</span>
                 </Label>
                 <Input
                   id="phoneNumber"
@@ -250,7 +252,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
               {/* Number of Guests */}
               <div className="space-y-2">
                 <Label htmlFor="numberOfGuests" className="text-primary font-semibold">
-                  {status === 'Attending' ? translations.numberOfGuestsAttending : translations.numberOfGuestsNotAttending}
+                  {status === 'Attending' ? translations.numberOfGuestsAttending : translations.numberOfGuestsNotAttending}<span className="text-red-500 ml-1">*</span>
                 </Label>
                 <Select value={numberOfGuests.toString()} onValueChange={handleNumberOfGuestsChange}>
                   <SelectTrigger className="h-12">
@@ -272,6 +274,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
                   <div key={index} className="space-y-2">
                     <Label htmlFor={`guest-${index}`} className="text-primary font-semibold">
                       {translations.guest}{index + 1}
+                      {index === 0 ? <span className="text-red-500 ml-1">*</span> : <span className="text-muted-foreground ml-1">({translations.optional})</span>}
                     </Label>
                     <Input
                       id={`guest-${index}`}
