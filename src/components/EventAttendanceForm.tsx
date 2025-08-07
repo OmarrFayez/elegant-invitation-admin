@@ -64,10 +64,11 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
       return;
     }
 
-    if ((status === 'Attending' || status === 'Not Attending') && guestNames.some(name => !name.trim())) {
+    // Only require first guest name, others are optional
+    if ((status === 'Attending' || status === 'Not Attending') && guestNames.length > 0 && !guestNames[0].trim()) {
       toast({
         title: translations.error, 
-        description: translations.fillAllGuestNames,
+        description: translations.fillFirstGuestName,
         variant: "destructive",
       });
       return;
@@ -150,7 +151,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
         error: "خطأ",
         selectAttendanceStatus: "الرجاء اختيار حالة الحضور",
         enterYourPhoneNumber: "الرجاء إدخال رقم هاتفك",
-        fillAllGuestNames: "الرجاء ملء جميع أسماء الضيوف",
+        fillFirstGuestName: "الرجاء ملء اسم الضيف الأول على الأقل",
         alreadySubmitted: "تم الإرسال مسبقاً",
         alreadyFilledForm: "لقد قمت بملء النموذج بهذا الرقم من قبل.",
         success: "نجح!",
@@ -174,7 +175,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
       error: "Error",
       selectAttendanceStatus: "Please select your attendance status",
       enterYourPhoneNumber: "Please enter your phone number", 
-      fillAllGuestNames: "Please fill in all guest names",
+      fillFirstGuestName: "Please fill in at least the first guest name",
       alreadySubmitted: "Already Submitted",
       alreadyFilledForm: "You have already filled the form with this phone number.",
       success: "Success!",
@@ -278,7 +279,7 @@ const EventAttendanceForm: React.FC<EventAttendanceFormProps> = ({ eventId, lang
                       onChange={(e) => handleGuestNameChange(index, e.target.value)}
                       placeholder={translations.enterGuestName}
                       className="h-12"
-                      required
+                      required={index === 0}
                     />
                   </div>
                 ))}
