@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -282,6 +282,21 @@ export type Database = {
         }
         Relationships: []
       }
+      test: {
+        Row: {
+          id: number
+          name: string | null
+        }
+        Insert: {
+          id?: number
+          name?: string | null
+        }
+        Update: {
+          id?: number
+          name?: string | null
+        }
+        Relationships: []
+      }
       user_permissions: {
         Row: {
           can_add: boolean | null
@@ -474,8 +489,8 @@ export type Database = {
       }
       generate_wedding_slug: {
         Args:
-          | { groom_name: string; bride_name: string }
-          | { groom_name: string; bride_name: string; language?: string }
+          | { bride_name: string; groom_name: string }
+          | { bride_name: string; groom_name: string; language?: string }
         Returns: string
       }
       get_current_user_id: {
